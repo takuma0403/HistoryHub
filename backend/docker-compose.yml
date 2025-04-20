@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - ./db:/app/db
+    working_dir: /app
+    command: air

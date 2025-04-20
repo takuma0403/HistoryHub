@@ -1,0 +1,23 @@
+FROM golang:1.21
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+  gcc \
+  musl-dev \
+  libsqlite3-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV CGO_ENABLED=1
+ENV GOOS=linux
+ENV GOARCH=amd64
+
+COPY backend/go.mod ./
+COPY backend/go.sum ./
+RUN go mod download
+
+COPY backend/. .
+
+RUN go build -o main .
+
+CMD ["./main"]
