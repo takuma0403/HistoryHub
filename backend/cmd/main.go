@@ -1,30 +1,32 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 
+	"HistoryHub/internal/config"
+	"HistoryHub/internal/db"
+	"HistoryHub/internal/handler"
+
 	"github.com/labstack/echo/v4"
-	_ "github.com/mattn/go-sqlite3"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
+	config.LoadEnv()
 	e := echo.New()
+	e.Use(echoMiddleware.Logger())
+	e.Use(echoMiddleware.Recover())
 
-	db, err := sql.Open("sqlite3", "./db/app.db")
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT);`)
-	if err != nil {
-		panic(err)
-	}
+	db.InitDB()
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "HistoryHub API OK")
 	})
+
+	authGroup := e.Group("/auth")
+	authGroup.POST("/signup", handler.SignUp)
+	authGroup.POST("/verify", handler.VerifyEmail)
+	authGroup.POST("/login", handler.Login)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
