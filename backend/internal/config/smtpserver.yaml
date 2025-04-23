@@ -1,0 +1,4 @@
+smtpserver: smtp.gmail.com
+smtpport: 587
+authaddress: ${SMTP_MAIL_ADDRESS}
+authpassword: ${SMTP_PASSWPRD}
