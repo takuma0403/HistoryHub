@@ -11,7 +11,7 @@ import (
 func SendVerificationEmail(email, code string) error {
 	fmt.Printf("Sending email to %s with code: %s\n", email, code)
 
-	subject := "【認証コード】CSWP アカウント登録の確認"
+	subject := "【認証コード】HistoryHub アカウント登録の確認"
 	body := fmt.Sprintf(`
 		<!DOCTYPE html>
 		<html lang="ja">
@@ -38,7 +38,7 @@ func SendVerificationEmail(email, code string) error {
 					font-size: larger;
 					font-weight: bold;
 					color: #ffffff;
-					background-color: #4091FF;
+					background-color: #a340ff;
 					padding: 12px 84px;
 					border-radius: 8px;
 					display: inline-block;
@@ -62,7 +62,7 @@ func SendVerificationEmail(email, code string) error {
 				</div>
 				<p>※本メールに心当たりがない場合は、このメールを削除してください。</p>
 				<div class="footer">
-					<p>&copy; CSWP サポート</p>
+					<p>&copy; HistoryHub サポート</p>
 				</div>
 			</div>
 		</body>
