@@ -24,29 +24,35 @@ func SignUp(email, password string) error {
 		return err
 	}
 
-	user := &model.User{
-		Email:    email,
-		Password: string(hashedPassword),
-		Verified: false,
-		Code:     code,
+	tmpUser := &model.TmpUser{
+		Email:         email,
+		Password:      string(hashedPassword),
+		VerifyCode:    code,
+		CreatedAt:     time.Now(),
 	}
 
-	repository.CreateUser(user)
+	repository.CreateTmpUser(tmpUser)
 
 	return util.SendVerificationEmail(email, code)
 }
 
 func VerifyEmail(email, code string) error {
-	user, err := repository.GetUserByEmail(email)
+	tmpUser, err := repository.GetTmpUserByEmail(email)
 	if err != nil {
 		return errors.New("user not found")
 	}
-	if user.Code != code {
+	if tmpUser.VerifyCode != code {
 		return errors.New("invalid verification code")
 	}
 
-	user.Verified = true
-	return repository.UpdateUser(user)
+	user := &model.User{
+		Email:         tmpUser.Email,
+		Password:      tmpUser.Password,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+	}
+
+	return repository.CreateUser(user)
 }
 
 func Login(email, password string) (string, error) {
