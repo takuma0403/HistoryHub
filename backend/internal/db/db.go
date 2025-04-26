@@ -23,8 +23,15 @@ func InitDB() {
 	}
 
 	// マイグレーション
-	if err := db.AutoMigrate(&model.User{}); err != nil {
-		log.Fatalf("Migration failed: %v", err)
+	models := []interface{}{
+		&model.User{},
+		&model.TmpUser{},
+	}
+	
+	for _, m := range models {
+		if err := db.AutoMigrate(m); err != nil {
+			log.Fatalf("Migration failed for %T: %v", m, err)
+		}
 	}
 	
 

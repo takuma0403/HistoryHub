@@ -40,8 +40,9 @@ func (c *GormCleaner) Run(ctx context.Context) {
 }
 
 func (c *GormCleaner) CleanupOnce() error {
+	expirationTime := time.Now().Add(-30 * time.Minute)
 	return c.DB.
-		Where("expires_at < ?", time.Now()).
+		Where("created_at  < ?", expirationTime).
 		Delete(model.TmpUser{}).
 		Error
 }

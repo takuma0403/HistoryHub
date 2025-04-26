@@ -2,28 +2,20 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
-type User struct {
-    ID        uint      `gorm:"primaryKey"`
-    CreatedAt time.Time
-    UpdatedAt time.Time
-    DeletedAt gorm.DeletedAt `gorm:"index"`
-    Email     string    `json:"email" gorm:"unique"`
-    Password  string    `json:"password"`
-    Verified  bool      `json:"verified"`
-    Code      string    `json:"code"`
+type TmpUser struct {
+    ID           uint      `gorm:"primaryKey;autoIncrement"`
+    Email        string    `gorm:"unique;not null"`
+    Password string    `gorm:"not null"`
+    VerifyCode   string    `gorm:"size:6;not null"`
+    CreatedAt    time.Time `gorm:"not null"`
 }
 
-type TmpUser struct {
-    ID        uint      `gorm:"primaryKey"`
-    CreatedAt time.Time
-    UpdatedAt time.Time
-    DeletedAt gorm.DeletedAt `gorm:"index"`
-    Email     string    `json:"email" gorm:"unique"`
-    Password  string    `json:"password"`
-    Verified  bool      `json:"verified"`
-    Code      string    `json:"code"`
+type User struct {
+    ID           uint      `gorm:"primaryKey;autoIncrement"`
+    Email        string    `gorm:"unique;not null"`
+    Password string    `gorm:"not null"`
+    CreatedAt    time.Time `gorm:"not null"`
+    UpdatedAt    time.Time `gorm:"not null"`
 }
