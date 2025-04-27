@@ -1,6 +1,7 @@
 package service
 
 import (
+	"HistoryHub/internal/config"
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/repository"
 	"HistoryHub/internal/util"
@@ -70,7 +71,8 @@ func Login(email, password string) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
 	})
-	tokenString, err := token.SignedString([]byte("your-secret"))
+
+	tokenString, err := token.SignedString([]byte(config.GetEnv("JWT_SECRET")))
 	if err != nil {
 		return "", err
 	}

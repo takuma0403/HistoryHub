@@ -9,6 +9,7 @@ import (
 	"HistoryHub/internal/config"
 	"HistoryHub/internal/db"
 	"HistoryHub/internal/handler"
+	"HistoryHub/internal/middleware"
 	"HistoryHub/internal/service"
 
 	"github.com/labstack/echo/v4"
@@ -39,6 +40,11 @@ func main() {
 	authGroup.POST("/signup", handler.SignUp)
 	authGroup.POST("/verify", handler.VerifyEmail)
 	authGroup.POST("/login", handler.Login)
+
+	apiGroup := e.Group("/api")
+	apiGroup.Use(middleware.JWTMiddleware())
+
+	apiGroup.GET("/sample", handler.Sample)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
