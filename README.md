@@ -6,6 +6,9 @@
 1. リポジトリのクローン  
     ```bash
      git clone git@github.com:takuma0403/HistoryHub.git
+2. ディレクトリの移動
+    ```bash
+     cd HistoryHub
 #### フロントエンド
 1. ディレクトリの移動  
     ```bash
@@ -21,5 +24,16 @@
     ```bash
      cd backend
 2. dockerコンテナ起動  
+    ```bash
+     docker compose up --build
+
+### 本番環境
+1. リポジトリのクローン  
+    ```bash
+     git clone git@github.com:takuma0403/HistoryHub.git
+2. ディレクトリの移動
+    ```bash
+     cd HistoryHub
+3. dockerコンテナ起動  
     ```bash
      docker compose up --build
