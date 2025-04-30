@@ -1,6 +1,7 @@
 package service
 
 import (
+	"HistoryHub/internal/config"
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/repository"
 	"HistoryHub/internal/util"
@@ -12,7 +13,8 @@ import (
 )
 
 type Claims struct {
-	Email string `json:"email"`
+	UserID uint `json:"user_id"`
+	Email  string `json:"email"`
 	jwt.RegisteredClaims
 }
 
@@ -25,10 +27,10 @@ func SignUp(email, password string) error {
 	}
 
 	tmpUser := &model.TmpUser{
-		Email:         email,
-		Password:      string(hashedPassword),
-		VerifyCode:    code,
-		CreatedAt:     time.Now(),
+		Email:      email,
+		Password:   string(hashedPassword),
+		VerifyCode: code,
+		CreatedAt:  time.Now(),
 	}
 
 	repository.CreateTmpUser(tmpUser)
@@ -46,10 +48,10 @@ func VerifyEmail(email, code string) error {
 	}
 
 	user := &model.User{
-		Email:         tmpUser.Email,
-		Password:      tmpUser.Password,
-		CreatedAt:     time.Now(),
-		UpdatedAt:     time.Now(),
+		Email:     tmpUser.Email,
+		Password:  tmpUser.Password,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	return repository.CreateUser(user)
@@ -65,12 +67,13 @@ func Login(email, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
-		Email: email,
+		UserID: user.ID,
+		Email:  user.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
 	})
-	tokenString, err := token.SignedString([]byte("your-secret"))
+	tokenString, err := token.SignedString([]byte(config.GetEnv("JWT_SECRET")))
 	if err != nil {
 		return "", err
 	}
