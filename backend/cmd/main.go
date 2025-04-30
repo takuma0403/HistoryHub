@@ -43,7 +43,7 @@ func main() {
 
 	apiGroup := e.Group("/api")
 	apiGroup.Use(middleware.JWTMiddleware())
-
+	apiGroup.GET("/me", handler.GetMe)
 	apiGroup.GET("/sample", handler.Sample)
 
 	e.Logger.Fatal(e.Start(":8081"))
