@@ -1,12 +1,17 @@
 import { RouteObject } from 'react-router-dom'
 import ReduxSample from './pages/ReduxSample'
 import NotFound from './pages/NotFound'
+import Login from './pages/Login'
 import { Navigate } from 'react-router-dom'
 
 const routes: RouteObject[] = [
   {
     path: '/',
     element: <ReduxSample />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
   {
     path: '/error/404',
