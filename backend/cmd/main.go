@@ -20,6 +20,7 @@ func main() {
 	config.LoadEnv()
 
 	e := echo.New()
+	e.Use(echoMiddleware.CORS())
 	e.Use(echoMiddleware.Logger())
 	e.Use(echoMiddleware.Recover())
 
