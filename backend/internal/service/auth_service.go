@@ -33,7 +33,10 @@ func SignUp(email, password string) error {
 		CreatedAt:  time.Now(),
 	}
 
-	repository.CreateTmpUser(tmpUser)
+	err = repository.CreateTmpUser(tmpUser)
+	if err != nil {
+		return err
+	}
 
 	return util.SendVerificationEmail(email, code)
 }

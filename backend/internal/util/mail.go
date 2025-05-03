@@ -6,6 +6,8 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/smtp"
+	"net/textproto"
+	"strings"
 )
 
 func SendVerificationEmail(email, code string) error {
@@ -138,5 +140,17 @@ func SmtpSendMail(mailAddress, mailSubject, mailBody string, isHTML bool) error 
 		return err
 	}
 
-	return client.Quit()
+	err = client.Quit()
+	if err != nil {
+		if tpErr, ok := err.(*textproto.Error); ok {
+			if tpErr.Code >= 250 && tpErr.Code < 300 {
+				return nil
+			}
+		}
+		if strings.HasPrefix(err.Error(), "250") {
+			return nil
+		}
+		return err
+	}
+	return nil
 }
