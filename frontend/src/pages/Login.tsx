@@ -41,7 +41,7 @@ export default function Login() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      minHeight="100vh"
+      minHeight="85vh"
       bgcolor="background.default"
     >
       <Card sx={{ maxWidth: 400, width: '100%', p: 2 }}>

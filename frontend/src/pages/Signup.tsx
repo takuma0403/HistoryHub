@@ -8,9 +8,9 @@ import {
   TextField,
   Typography,
   CircularProgress,
-  Link,
+  Link as MuiLink,
 } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setEmail } from '../features/auth/authSlice';
 
@@ -41,7 +41,7 @@ export default function Signup() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      minHeight="100vh"
+      minHeight="85vh"
       bgcolor="background.default"
     >
       <Card sx={{ maxWidth: 400, width: '100%', p: 2 }}>
@@ -84,17 +84,14 @@ export default function Signup() {
               {(isLoading || isSubmitting) ? (
                 <CircularProgress size={24} />
               ) : (
-                '登録'
+                '作成'
               )}
             </Button>
           </Box>
           <Box mt={2}>
-            <Typography variant="body2" align="center">
-              すでにアカウントをお持ちの方は{' '}
-              <Link component={RouterLink} to="/login">
-                ログイン
-              </Link>
-            </Typography>
+            <MuiLink component={Link} to="/login" underline="hover">
+              すでにアカウントお持ちの方はこちら
+            </MuiLink>
           </Box>
         </CardContent>
       </Card>
