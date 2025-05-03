@@ -16,6 +16,7 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+      localStorage.setItem("token", state.token)
     },
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
@@ -23,6 +24,7 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.token = null;
       state.email = null;
+      localStorage.removeItem("token");
     },
   },
 });
