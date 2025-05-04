@@ -11,12 +11,14 @@ func GetMe(c echo.Context) error {
 	userToken := c.Get("user").(*jwt.Token)
 	claims := userToken.Claims.(jwt.MapClaims)
 
-	userID, ok := claims["user_id"].(float64)
-	if !ok {
+	username, ok1 := claims["username"].(string)
+	email, ok2 := claims["email"].(string)
+	if !ok1 || !ok2 {
 		return c.JSON(http.StatusUnauthorized, "Invalid token")
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"user_id": uint(userID),
+		"username": username,
+		"email":    email,
 	})
 }

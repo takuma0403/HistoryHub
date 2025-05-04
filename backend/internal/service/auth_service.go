@@ -6,14 +6,17 @@ import (
 	"HistoryHub/internal/repository"
 	"HistoryHub/internal/util"
 	"errors"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Claims struct {
-	UserID uint `json:"user_id"`
+	Username string `json:"username"`
 	Email  string `json:"email"`
 	jwt.RegisteredClaims
 }
@@ -50,9 +53,13 @@ func VerifyEmail(email, code string) error {
 		return errors.New("invalid verification code")
 	}
 
+	username := _sanitizeUsername(tmpUser.Email)
+
 	user := &model.User{
+		ID:        uuid.New(),
 		Email:     tmpUser.Email,
 		Password:  tmpUser.Password,
+		Username:  username,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -70,8 +77,8 @@ func Login(email, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
-		UserID: user.ID,
-		Email:  user.Email,
+		Username: user.Username,
+		Email:    user.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
@@ -81,4 +88,14 @@ func Login(email, password string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func _sanitizeUsername(input string) string {
+	at := strings.Index(input, "@")
+	if at == -1 {
+		at = len(input)
+	}
+	base := input[:at]
+	re := regexp.MustCompile(`[^a-zA-Z0-9_-]`)
+	return re.ReplaceAllString(strings.ToLower(base), "")
 }
