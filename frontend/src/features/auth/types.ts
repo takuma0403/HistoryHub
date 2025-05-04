@@ -18,7 +18,7 @@ export interface LoginRequest {
   }
   
   export interface MeResponse {
-    id: number;
+    username: string;
     email: string;
   }
   
