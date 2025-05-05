@@ -3,11 +3,10 @@ package service
 import (
 	"HistoryHub/internal/repository"
 	"errors"
-
-	"github.com/google/uuid"
 )
 
-func UpdateUsername(id uuid.UUID, username string) error {
+func UpdateUsername(id, username string) error {
+	id = id
 	user, err := repository.GetUserByID(id)
 	if err != nil {
 		return errors.New("user not found")

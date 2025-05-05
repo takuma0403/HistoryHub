@@ -16,8 +16,7 @@ import (
 )
 
 type Claims struct {
-	Username string `json:"username"`
-	Email  string `json:"email"`
+	ID uuid.UUID `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -77,8 +76,7 @@ func Login(email, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
-		Username: user.Username,
-		Email:    user.Email,
+		ID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},

@@ -44,7 +44,7 @@ func main() {
 
 	apiGroup := e.Group("/api")
 	apiGroup.Use(middleware.JWTMiddleware())
-	apiGroup.GET("/me", handler.GetMe)
+	apiGroup.GET("/me", handler.GetMeID)
 	apiGroup.GET("/sample", handler.Sample)
 	apiGroup.PUT("/updateUsername", handler.UpdateUsername)
 
