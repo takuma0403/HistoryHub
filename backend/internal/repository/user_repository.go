@@ -33,10 +33,18 @@ func CreateTmpUser(tmpUser *model.TmpUser) error {
 	return db.DB.Create(tmpUser).Error
 }
 
-
 func UpdateUser(user *model.User) error {
 	return db.DB.Save(user).Error
 }
+
+func GetUserByID(id string) (*model.User, error) {
+	var user model.User
+	if err := db.DB.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, errors.New("user not found")
+	}
+	return &user, nil
+}
+
 
 func GetUserByEmail(email string) (*model.User, error) {
 	var user model.User

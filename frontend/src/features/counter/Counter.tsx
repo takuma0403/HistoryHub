@@ -15,7 +15,7 @@ const Counter = () => {
   return (
     <div style={{ textAlign: "center" }}>
       <div>
-        ようこそ、{data?.email} さん（ID: {data?.id}）
+        ようこそ、{data?.username} さん
       </div>
       <h2>Reduxカウンター</h2>
       <p>今の値: {count}</p>
