@@ -47,6 +47,14 @@ func main() {
 	apiGroup.GET("/me", handler.GetMeID)
 	apiGroup.GET("/sample", handler.Sample)
 	apiGroup.PUT("/updateUsername", handler.UpdateUsername)
+	
+	apiGroup.POST("/profile", handler.CreateProfile)
+	apiGroup.PUT("/profile", handler.UpdateProfile)
+
+	apiGroup.POST("/skill", handler.CreateSkill)
+	apiGroup.PUT("/skill/:id", handler.UpdateSkill)
+	apiGroup.DELETE("/skill/:id", handler.DeleteSkill)
+
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
