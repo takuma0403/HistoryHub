@@ -42,3 +42,11 @@ func UpdateProfile(profile model.Profile) error {
 	}
 	return nil
 }
+
+func GetProfile(UserID string) (*model.Profile, error) {
+	profile, err := repository.GetProfileByUserID(UserID)
+	if err != nil  {
+		return nil, err
+	}
+	return profile, nil
+}

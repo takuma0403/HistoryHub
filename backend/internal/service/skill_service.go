@@ -48,3 +48,15 @@ func DeleteSkill(UserID string, id uint) error {
 	}
 	return nil
 }
+
+func GetSkills(UserID string) ([]model.Skill, error) {
+	profile, err := repository.GetProfileByUserID(UserID)
+	if err != nil  {
+		return nil, err
+	}
+	skills, err := repository.GetSkillsProfileByID(profile.ID)
+	if err != nil  {
+		return nil, err
+	}
+	return skills, nil
+}

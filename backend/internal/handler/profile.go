@@ -35,7 +35,7 @@ func CreateProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, profile)
+	return c.JSON(http.StatusCreated, nil)
 }
 
 
@@ -62,6 +62,23 @@ func UpdateProfile(c echo.Context) error {
 
 	if err := service.UpdateProfile(profile); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func GetProfile(c echo.Context) error {
+	userToken := c.Get("user").(*jwt.Token)
+	claims := userToken.Claims.(jwt.MapClaims)
+
+	id, ok := claims["id"].(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	}
+
+	profile, err := service.GetProfile(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, profile)

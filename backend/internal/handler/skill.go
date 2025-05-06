@@ -73,3 +73,20 @@ func DeleteSkill(c echo.Context) error {
 
 	return c.NoContent(http.StatusNoContent)
 }
+
+func GetSkill(c echo.Context) error {
+	userToken := c.Get("user").(*jwt.Token)
+	claims := userToken.Claims.(jwt.MapClaims)
+
+	id, ok := claims["id"].(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	}
+
+	skills, err := service.GetSkills(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, skills)
+}

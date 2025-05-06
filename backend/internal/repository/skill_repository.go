@@ -34,3 +34,14 @@ func GetSkillByID(id uint)  (*model.Skill, error) {
 	}
 	return &skill, nil
 }
+
+func GetSkillsProfileByID(ProfileID uint) ([]model.Skill, error) {
+	var skills []model.Skill
+	if err := db.DB.Where("profile_id = ?", ProfileID).Find(&skills).Error; err != nil {
+		return nil, err
+	}
+	if len(skills) == 0 {
+		return nil, errors.New("no skills found")
+	}
+	return skills, nil
+}

@@ -48,9 +48,11 @@ func main() {
 	apiGroup.GET("/sample", handler.Sample)
 	apiGroup.PUT("/updateUsername", handler.UpdateUsername)
 	
+	apiGroup.GET("/profile", handler.GetProfile)
 	apiGroup.POST("/profile", handler.CreateProfile)
 	apiGroup.PUT("/profile", handler.UpdateProfile)
 
+	apiGroup.GET("/skill", handler.GetSkill)
 	apiGroup.POST("/skill", handler.CreateSkill)
 	apiGroup.PUT("/skill/:id", handler.UpdateSkill)
 	apiGroup.DELETE("/skill/:id", handler.DeleteSkill)
