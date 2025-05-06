@@ -46,7 +46,9 @@ func main() {
 	apiGroup.Use(middleware.JWTMiddleware())
 	apiGroup.GET("/me", handler.GetMeID)
 	apiGroup.GET("/sample", handler.Sample)
-	apiGroup.PUT("/updateUsername", handler.UpdateUsername)
+
+	apiGroup.GET("/username", handler.GetUsername)
+	apiGroup.PUT("/username", handler.UpdateUsername)
 	
 	apiGroup.GET("/profile", handler.GetProfile)
 	apiGroup.POST("/profile", handler.CreateProfile)

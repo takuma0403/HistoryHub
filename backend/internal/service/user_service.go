@@ -6,7 +6,6 @@ import (
 )
 
 func UpdateUsername(id, username string) error {
-	id = id
 	user, err := repository.GetUserByID(id)
 	if err != nil {
 		return errors.New("user not found")
@@ -15,4 +14,9 @@ func UpdateUsername(id, username string) error {
 	user.Username = username
 
 	return repository.UpdateUser(user)
+}
+
+func GetUsername(id string) (string, error) {
+	user, err := repository.GetUserByID(id)
+	return user.Username, err
 }
