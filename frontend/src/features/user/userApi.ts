@@ -4,10 +4,11 @@ import BASE_URL from "../../constants/api";
 import {
   ProfileRequest,
   profileResponse,
-  UpdateUsernameRequest,
   SkillRequest,
   SkillResponse,
-  UpdateSkillRequest
+  UpdateSkillRequest,
+  UsernameRequest,
+  UsernameResponse
 } from './types';
 
 export const userApi = createApi({
@@ -23,9 +24,12 @@ export const userApi = createApi({
     }
   }),
   endpoints: (builder) => ({
-    updateUsername: builder.mutation<void, UpdateUsernameRequest>({
+    getUsername: builder.query<UsernameResponse, void>({
+      query: () => 'api/username'
+    }),
+    updateUsername: builder.mutation<void, UsernameRequest>({
       query: (body) => ({
-        url: 'api/updateUsername',
+        url: 'api/username',
         method: 'PUT',
         body,
       }),
@@ -75,6 +79,7 @@ export const userApi = createApi({
 });
 
 export const {
+  useGetUsernameQuery,
   useUpdateUsernameMutation,
   useGetProfileQuery,
   useCreateProfileMutation,
