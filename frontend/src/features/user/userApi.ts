@@ -26,7 +26,10 @@ export const userApi = createApi({
   endpoints: (builder) => ({
     getProfileByUsername: builder.query<profileResponse, string>({
       query: (username) => `profile/${username}`,
-    }),    
+    }),
+    getSkillsByUsername: builder.query<SkillResponse[], string>({
+      query: (username) => `skill/${username}`,
+    }),
     getUsername: builder.query<UsernameResponse, void>({
       query: () => 'api/username'
     }),
@@ -83,6 +86,7 @@ export const userApi = createApi({
 
 export const {
   useGetProfileByUsernameQuery,
+  useGetSkillsByUsernameQuery,
   useGetUsernameQuery,
   useUpdateUsernameMutation,
   useGetProfileQuery,

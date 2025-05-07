@@ -28,13 +28,13 @@ export interface SkillResponse {
   id: string;
   profileId: string;
   name: string;
-  descriptionn: string;
+  description: string;
   isMainSkill: string;
 }
 
 export interface SkillRequest {
   name: string;
-  descriptionn: string;
+  description: string;
   isMainSkill: string;
 }
 

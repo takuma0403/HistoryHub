@@ -12,39 +12,49 @@ import {
   Divider,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetProfileByUsernameQuery } from "../features/user/userApi";
+import {
+  useGetProfileByUsernameQuery,
+  useGetSkillsByUsernameQuery,
+} from "../features/user/userApi";
 
 export default function Portofolio() {
   const { username } = useParams<{ username: string }>();
   const {
     data: profile,
-    isLoading,
-    error,
+    isLoading: isProfileLoading,
+    error: profileError,
   } = useGetProfileByUsernameQuery(username ?? "");
+  const {
+    data: skills,
+    isLoading: isSkillsLoading,
+    error: skillsError,
+  } = useGetSkillsByUsernameQuery(username ?? "");
+
   const navigate = useNavigate();
   const theme = useTheme();
-
   const skillsRef = useRef<HTMLDivElement>(null!);
   const worksRef = useRef<HTMLDivElement>(null!);
   const containerRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    if (!isLoading && !profile) {
+    if (!isProfileLoading && !profile) {
       navigate("/error/404");
     }
-  }, [isLoading, profile, navigate]);
+  }, [isProfileLoading, profile, navigate]);
 
-  if (isLoading)
+  if (isProfileLoading || isSkillsLoading)
     return (
       <Box display="flex" justifyContent="center" mt={4}>
         <CircularProgress color="primary" />
       </Box>
     );
 
-  if (error)
+  if (profileError || skillsError)
     return (
       <Box maxWidth={600} mx="auto" mt={4}>
-        <Alert severity="error">プロフィールの取得に失敗しました</Alert>
+        <Alert severity="error">
+          プロフィールまたはスキルの取得に失敗しました
+        </Alert>
       </Box>
     );
 
@@ -153,12 +163,12 @@ export default function Portofolio() {
         }}
       >
         <div ref={skillsRef}>
-          <Typography variant="h6" gutterBottom color="text.primary">
+          <Typography variant="h5" gutterBottom color="text.primary">
             Skills
           </Typography>
-          {[...Array(5)].map((_, i) => (
+          {skills?.map((skill) => (
             <Card
-              key={`skill-${i}`}
+              key={skill.id}
               sx={{
                 mb: 2,
                 height: 150,
@@ -167,11 +177,12 @@ export default function Portofolio() {
               }}
             >
               <CardContent>
-                <Typography variant="subtitle1" color="primary">
-                  Skill #{i + 1}
+                <Typography variant="h6" color="primary">
+                  {skill.name}
                 </Typography>
+                <Box mb={2} />
                 <Typography variant="body2" color="text.secondary">
-                  スキルの説明です（スクロール確認用）
+                  {skill.description}
                 </Typography>
               </CardContent>
             </Card>
@@ -179,7 +190,7 @@ export default function Portofolio() {
         </div>
 
         <div ref={worksRef}>
-          <Typography variant="h6" gutterBottom color="text.primary">
+          <Typography variant="h5" gutterBottom color="text.primary">
             Works
           </Typography>
           {[...Array(5)].map((_, i) => (
