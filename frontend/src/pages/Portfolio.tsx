@@ -78,25 +78,19 @@ export default function Portofolio() {
             </Typography>
             <Grid container spacing={2} mt={1}>
               {birthDate && (
-                <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>生年月日:</strong> {formatJapaneseDate(birthDate)}
-                  </Typography>
-                </Grid>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>生年月日:</strong> {formatJapaneseDate(birthDate)}
+                </Typography>
               )}
               {school && (
-                <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>学校:</strong> {school}
-                  </Typography>
-                </Grid>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>学校:</strong> {school}
+                </Typography>
               )}
               {hobby && (
-                <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>趣味:</strong> {hobby}
-                  </Typography>
-                </Grid>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>趣味:</strong> {hobby}
+                </Typography>
               )}
             </Grid>
           </CardContent>
