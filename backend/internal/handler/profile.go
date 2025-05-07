@@ -4,6 +4,7 @@ import (
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/service"
 	"net/http"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -67,6 +68,16 @@ func UpdateProfile(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
+type ProfileResponse struct {
+	ID        uint      `json:"id"`
+	UserID    uuid.UUID `json:"userId"`
+	LastName  string    `json:"firstName"`
+	FirstName string    `json:"lastName"`
+	BirthDate time.Time `json:"birthDate"`
+	School    string    `json:"school"`
+	Hobby     string    `json:"hobby"`
+}
+
 func GetProfile(c echo.Context) error {
 	userToken := c.Get("user").(*jwt.Token)
 	claims := userToken.Claims.(jwt.MapClaims)
@@ -77,9 +88,20 @@ func GetProfile(c echo.Context) error {
 	}
 
 	profile, err := service.GetProfile(id)
+
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, profile)
+	res := &ProfileResponse{
+		ID:        profile.ID,
+		UserID:    profile.UserID,
+		FirstName: profile.FirstName,
+		LastName:  profile.LastName,
+		BirthDate: profile.BirthDate,
+		School:    profile.School,
+		Hobby:     profile.Hobby,
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
