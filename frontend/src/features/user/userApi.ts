@@ -24,6 +24,9 @@ export const userApi = createApi({
     }
   }),
   endpoints: (builder) => ({
+    getProfileByUsername: builder.query<profileResponse, string>({
+      query: (username) => `profile/${username}`,
+    }),    
     getUsername: builder.query<UsernameResponse, void>({
       query: () => 'api/username'
     }),
@@ -79,6 +82,7 @@ export const userApi = createApi({
 });
 
 export const {
+  useGetProfileByUsernameQuery,
   useGetUsernameQuery,
   useUpdateUsernameMutation,
   useGetProfileQuery,

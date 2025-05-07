@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import { Navigate } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Verify from "./pages/Verify";
+import Portofolio from "./pages/Portfolio";
 
 const routes: RouteObject[] = [
   {
@@ -22,6 +23,10 @@ const routes: RouteObject[] = [
   {
     path: "/verify",
     element: <Verify />,
+  },
+  {
+    path:"/:username",
+    element: <Portofolio />
   },
   {
     path: "/error/404",
