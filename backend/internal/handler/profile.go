@@ -71,8 +71,8 @@ func UpdateProfile(c echo.Context) error {
 type ProfileResponse struct {
 	ID        uint      `json:"id"`
 	UserID    uuid.UUID `json:"userId"`
-	LastName  string    `json:"firstName"`
-	FirstName string    `json:"lastName"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
 	BirthDate time.Time `json:"birthDate"`
 	School    string    `json:"school"`
 	Hobby     string    `json:"hobby"`
