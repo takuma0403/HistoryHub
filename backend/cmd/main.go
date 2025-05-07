@@ -36,6 +36,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(200, "HistoryHub API OK")
 	})
+	e.GET("/profile/:username", handler.GetProfileByUsername)
+	e.GET("/skill/:username", handler.GetSkillByUsername)
 
 	authGroup := e.Group("/auth")
 	authGroup.POST("/signup", handler.SignUp)

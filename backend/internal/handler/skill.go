@@ -110,3 +110,29 @@ func GetSkill(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, res)
 }
+
+func GetSkillByUsername(c echo.Context) error {
+	username := c.Param("username")
+	UserID, err := service.GetUserIDByUsername(username)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	skills, err := service.GetSkills(UserID)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	var res []SkillResponse
+	for _, s := range skills {
+		res = append(res, SkillResponse{
+			Name:        s.Name,
+			Description: s.Description,
+			IsMainSkill: s.IsMainSkill,
+		})
+	}
+
+	return c.JSON(http.StatusOK, res)
+}

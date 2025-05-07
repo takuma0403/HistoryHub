@@ -105,3 +105,28 @@ func GetProfile(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, res)
 }
+
+func GetProfileByUsername(c echo.Context) error {
+	username := c.Param("username")
+	UserID, err := service.GetUserIDByUsername(username)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	profile, err := service.GetProfile(UserID)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	res := &ProfileResponse{
+		FirstName: profile.FirstName,
+		LastName:  profile.LastName,
+		BirthDate: profile.BirthDate,
+		School:    profile.School,
+		Hobby:     profile.Hobby,
+	}
+
+	return c.JSON(http.StatusOK, res)
+}

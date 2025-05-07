@@ -20,3 +20,8 @@ func GetUsername(id string) (string, error) {
 	user, err := repository.GetUserByID(id)
 	return user.Username, err
 }
+
+func GetUserIDByUsername(username string) (string, error) {
+	user, err := repository.GetUserByUsername(username)
+	return user.ID.String(), err
+}
