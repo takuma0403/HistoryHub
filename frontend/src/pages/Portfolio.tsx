@@ -71,12 +71,21 @@ export default function Portofolio() {
     }).format(date);
   };
 
+  const scrollToElement = (targetRef: React.RefObject<HTMLElement>, offset = 0) => {
+    if (targetRef.current && containerRef.current) {
+      const containerTop = containerRef.current.getBoundingClientRect().top;
+      const targetTop = targetRef.current.getBoundingClientRect().top;
+      const scrollOffset = targetTop - containerTop + containerRef.current.scrollTop + offset;
+      containerRef.current.scrollTo({ top: scrollOffset, behavior: "smooth" });
+    }
+  };
+
   return (
     <Box display="flex" height="85vh" overflow="hidden">
       {/* プロフィールセクション */}
       <Box
         sx={{
-          width: "30%",
+          width: "20%",
           minWidth: 240,
           flexShrink: 0,
           height: "100%",
@@ -88,28 +97,75 @@ export default function Portofolio() {
         }}
       >
         <Box>
-          <Box display="flex" flexDirection="column" alignItems="left" mb={2}>
-            <Typography variant="h5" color="text.primary">
-              {lastName} {firstName}
-            </Typography>
-          </Box>
+          <Typography variant="h5" color="text.primary" gutterBottom>
+            Profile
+          </Typography>
           <Divider sx={{ mb: 2 }} />
 
-          <Box>
+          <Typography variant="h6" color="text.secondary" mb={2}>
+            {lastName} {firstName}
+          </Typography>
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "75px 15px 1fr",
+              rowGap: 1,
+              alignItems: "start",
+            }}
+          >
             {birthDate && (
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                <strong>生年月日:</strong> {formatJapaneseDate(birthDate)}
-              </Typography>
+              <>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontWeight="bold"
+                >
+                  生年月日
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  :
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {formatJapaneseDate(birthDate)}
+                </Typography>
+              </>
             )}
+
             {school && (
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                <strong>学校:</strong> {school}
-              </Typography>
+              <>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontWeight="bold"
+                >
+                  学校
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  :
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {school}
+                </Typography>
+              </>
             )}
+
             {hobby && (
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                <strong>趣味:</strong> {hobby}
-              </Typography>
+              <>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontWeight="bold"
+                >
+                  趣味
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  :
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {hobby}
+                </Typography>
+              </>
             )}
           </Box>
         </Box>
@@ -119,25 +175,16 @@ export default function Portofolio() {
           orientation="vertical"
           variant="scrollable"
           indicatorColor="primary"
+          sx={{ alignSelf: "flex-end" }}
         >
           <Tab
             label="▶ Skills"
-            onClick={() =>
-              skillsRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              })
-            }
+            onClick={() => scrollToElement(skillsRef, -16)}
             sx={{ color: theme.palette.primary.main }}
           />
           <Tab
             label="▶ Works"
-            onClick={() =>
-              worksRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              })
-            }
+            onClick={() => scrollToElement(worksRef, -16)}
             sx={{ color: theme.palette.primary.main }}
           />
         </Tabs>
