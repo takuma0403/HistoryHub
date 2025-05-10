@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  useGetProfileByUsernameQuery,
+  useGetProfileQuery,
   useUpdateProfileMutation,
-  useGetSkillsByUsernameQuery,
+  useGetSkillsQuery,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useDeleteSkillMutation,
@@ -30,12 +30,12 @@ export default function Portofolio() {
     data: profile,
     isLoading: isProfileLoading,
     error: profileError,
-  } = useGetProfileByUsernameQuery(username ?? "");
+  } = useGetProfileQuery();
   const {
     data: skills,
     isLoading: isSkillsLoading,
     error: skillsError,
-  } = useGetSkillsByUsernameQuery(username ?? "");
+  } = useGetSkillsQuery();
 
   const [updateProfile] = useUpdateProfileMutation();
   const [addSkill] = useCreateSkillMutation();
@@ -230,7 +230,10 @@ export default function Portofolio() {
                   size="small"
                   value={editableProfile[key as keyof typeof editableProfile]}
                   onChange={(e) =>
-                    handleProfileChange(key as keyof typeof editableProfile, e.target.value)
+                    handleProfileChange(
+                      key as keyof typeof editableProfile,
+                      e.target.value
+                    )
                   }
                   variant="outlined"
                   fullWidth
@@ -288,27 +291,67 @@ export default function Portofolio() {
         }}
       >
         <div ref={skillsRef}>
-          <Typography variant="h5" gutterBottom color="text.primary">
-            Skills
-          </Typography>
-          {skills?.map((skill) => (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h5" color="text.primary">
+              Skills
+            </Typography>
+            <Button variant="outlined" onClick={handleAddSkill}>
+              スキルを追加
+            </Button>
+          </Box>
+
+          {editableSkills.map((skill) => (
             <Card
               key={skill.id}
               sx={{
                 mb: 2,
-                height: 150,
+                p: 2,
                 backgroundColor: theme.palette.background.paper,
                 boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
               }}
             >
               <CardContent>
-                <Typography variant="h6" color="primary">
-                  {skill.name}
-                </Typography>
-                <Box mb={2} />
-                <Typography variant="body2" color="text.secondary">
-                  {skill.description}
-                </Typography>
+                <TextField
+                  label="スキル名"
+                  fullWidth
+                  value={skill.name}
+                  onChange={(e) =>
+                    handleSkillChange(skill.id, "name", e.target.value)
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="説明"
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  value={skill.description}
+                  onChange={(e) =>
+                    handleSkillChange(skill.id, "description", e.target.value)
+                  }
+                  sx={{ mb: 2 }}
+                />
+                <Box display="flex" justifyContent="flex-end" gap={1}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleUpdateSkill(skill)}
+                  >
+                    保存
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleDeleteSkill(skill)}
+                  >
+                    削除
+                  </Button>
+                </Box>
               </CardContent>
             </Card>
           ))}

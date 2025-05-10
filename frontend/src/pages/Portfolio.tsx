@@ -215,7 +215,6 @@ export default function Portofolio() {
           </Typography>
           {skills?.map((skill) => (
             <Card
-              key={skill.id}
               sx={{
                 mb: 2,
                 height: 150,
