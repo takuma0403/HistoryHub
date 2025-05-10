@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Verify from "./pages/Verify";
 import Portofolio from "./pages/Portfolio";
 import Home from "./pages/Home";
+import EditPortfolio from "./pages/EditPortfolio";
 
 const routes: RouteObject[] = [
   {
@@ -27,6 +28,10 @@ const routes: RouteObject[] = [
   {
     path:"/:username",
     element: <Portofolio />
+  },
+  {
+    path:"/:username/edit",
+    element: <EditPortfolio />
   },
   {
     path: "/error/404",
