@@ -54,7 +54,7 @@ func GetSkills(UserID string) ([]model.Skill, error) {
 	if err != nil  {
 		return nil, err
 	}
-	skills, err := repository.GetSkillsProfileByID(profile.ID)
+	skills, err := repository.GetSkillsByID(profile.ID)
 	if err != nil  {
 		return nil, err
 	}
