@@ -37,7 +37,7 @@
 1. ディレクトリの移動  
     ```bash
      cd backend
-2. dockerコンテナ起動  
+2. Dockerコンテナ起動  
     ```bash
      docker compose up --build
 ### 本番環境
@@ -47,6 +47,11 @@
 2. ディレクトリの移動
     ```bash
      cd HistoryHub
-3. dockerコンテナ起動  
+3. Dockerコンテナビルド  
+   一度にすると処理落ちすることがあるのでサービスを一つずつビルドする
     ```bash
-     docker compose up --build
+     docker compose build backend
+     docker compose build nginx
+4. Dockerコンテナ起動
+    ```bash
+     docker compose up
