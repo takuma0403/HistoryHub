@@ -29,13 +29,13 @@ export interface SkillResponse {
   profileId: string;
   name: string;
   description: string;
-  isMainSkill: string;
+  isMainSkill: boolean;
 }
 
 export interface SkillRequest {
   name: string;
   description: string;
-  isMainSkill: string;
+  isMainSkill: boolean;
 }
 
 export interface UpdateSkillRequest extends SkillRequest {

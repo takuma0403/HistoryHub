@@ -11,10 +11,9 @@ import {
   useTheme,
   Divider,
   TextField,
-  IconButton,
   Button,
 } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
@@ -25,16 +24,17 @@ import {
 } from "../features/user/userApi";
 
 export default function Portofolio() {
-  const { username } = useParams<{ username: string }>();
   const {
     data: profile,
     isLoading: isProfileLoading,
     error: profileError,
+    refetch: refetchProfile,
   } = useGetProfileQuery();
   const {
     data: skills,
     isLoading: isSkillsLoading,
     error: skillsError,
+    refetch: refetchSkills,
   } = useGetSkillsQuery();
 
   const [updateProfile] = useUpdateProfileMutation();
@@ -54,7 +54,7 @@ export default function Portofolio() {
       id: string;
       name: string;
       description: string;
-      isMainSkill: string;
+      isMainSkill: boolean;
     }[]
   >([]);
 
@@ -83,6 +83,19 @@ export default function Portofolio() {
       setEditableSkills(skills);
     }
   }, [skills]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refetchProfile();
+        refetchSkills();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [refetchProfile, refetchSkills]);
 
   if (isProfileLoading || isSkillsLoading)
     return (
@@ -140,42 +153,42 @@ export default function Portofolio() {
       ...editableProfile,
       birthDate: isoBirthDate,
     });
+    await refetchProfile();
   };
 
   const handleUpdateSkill = async (skill: {
     id: string;
     name: string;
     description: string;
-    isMainSkill: string;
+    isMainSkill: boolean;
   }) => {
     await updateSkill({ ...skill });
+    await refetchSkills();
   };
 
   const handleDeleteSkill = async (skill: {
     id: string;
     name: string;
     description: string;
-    isMainSkill: string;
+    isMainSkill: boolean;
   }) => {
     await deleteSkill({ ...skill });
+    await refetchSkills();
   };
 
   const handleAddSkill = async () => {
     const newSkill = {
       name: "",
       description: "",
-      isMainSkill: "false",
+      isMainSkill: false,
     };
     try {
       await addSkill({ ...newSkill }).unwrap();
-      setEditableSkills((prev) => [
-        ...prev,
-        { id: new Date().toISOString(), ...newSkill },
-      ]);
+      await refetchSkills();
     } catch (error) {
       console.error("Error adding skill:", error);
     }
-  };
+  }
 
   return (
     <Box display="flex" height="85vh" overflow="hidden">
