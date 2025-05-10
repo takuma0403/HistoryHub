@@ -12,6 +12,7 @@ import {
   Divider,
   TextField,
   Button,
+  Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -188,7 +189,7 @@ export default function Portofolio() {
     } catch (error) {
       console.error("Error adding skill:", error);
     }
-  }
+  };
 
   return (
     <Box display="flex" height="85vh" overflow="hidden">
@@ -303,7 +304,7 @@ export default function Portofolio() {
           },
         }}
       >
-        <div ref={skillsRef}>
+        <Box ref={skillsRef} mb={6}>
           <Box
             display="flex"
             justifyContent="space-between"
@@ -318,57 +319,68 @@ export default function Portofolio() {
             </Button>
           </Box>
 
-          {editableSkills.map((skill) => (
-            <Card
-              key={skill.id}
-              sx={{
-                mb: 2,
-                p: 2,
-                backgroundColor: theme.palette.background.paper,
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <CardContent>
-                <TextField
-                  label="スキル名"
-                  fullWidth
-                  value={skill.name}
-                  onChange={(e) =>
-                    handleSkillChange(skill.id, "name", e.target.value)
-                  }
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  label="説明"
-                  fullWidth
-                  multiline
-                  minRows={2}
-                  value={skill.description}
-                  onChange={(e) =>
-                    handleSkillChange(skill.id, "description", e.target.value)
-                  }
-                  sx={{ mb: 2 }}
-                />
-                <Box display="flex" justifyContent="flex-end" gap={1}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleUpdateSkill(skill)}
-                  >
-                    保存
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleDeleteSkill(skill)}
-                  >
-                    削除
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          <Grid container spacing={2}>
+            {editableSkills.map((skill, idx) => (
+              <Grid
+                key={`skill-${idx}`}
+                sx={{ flexBasis: { xs: "100%", sm: "49%" } }}
+              >
+                <Card
+                  key={skill.id}
+                  sx={{
+                    mb: 2,
+                    p: 2,
+                    backgroundColor: theme.palette.background.paper,
+                    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                  }}
+                >
+                  <CardContent>
+                    <TextField
+                      label="スキル名"
+                      fullWidth
+                      value={skill.name}
+                      onChange={(e) =>
+                        handleSkillChange(skill.id, "name", e.target.value)
+                      }
+                      sx={{ mb: 2 }}
+                    />
+                    <TextField
+                      label="説明"
+                      fullWidth
+                      multiline
+                      minRows={2}
+                      value={skill.description}
+                      onChange={(e) =>
+                        handleSkillChange(
+                          skill.id,
+                          "description",
+                          e.target.value
+                        )
+                      }
+                      sx={{ mb: 2 }}
+                    />
+                    <Box display="flex" justifyContent="flex-end" gap={1}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleUpdateSkill(skill)}
+                      >
+                        保存
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDeleteSkill(skill)}
+                      >
+                        削除
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
         <div ref={worksRef}>
           <Typography variant="h5" gutterBottom color="text.primary">

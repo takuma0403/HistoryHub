@@ -10,6 +10,7 @@ import {
   Tab,
   useTheme,
   Divider,
+  Grid,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -71,11 +72,15 @@ export default function Portofolio() {
     }).format(date);
   };
 
-  const scrollToElement = (targetRef: React.RefObject<HTMLElement>, offset = 0) => {
+  const scrollToElement = (
+    targetRef: React.RefObject<HTMLElement>,
+    offset = 0
+  ) => {
     if (targetRef.current && containerRef.current) {
       const containerTop = containerRef.current.getBoundingClientRect().top;
       const targetTop = targetRef.current.getBoundingClientRect().top;
-      const scrollOffset = targetTop - containerTop + containerRef.current.scrollTop + offset;
+      const scrollOffset =
+        targetTop - containerTop + containerRef.current.scrollTop + offset;
       containerRef.current.scrollTo({ top: scrollOffset, behavior: "smooth" });
     }
   };
@@ -209,33 +214,39 @@ export default function Portofolio() {
           },
         }}
       >
-        <div ref={skillsRef}>
+        <Box ref={skillsRef} mb={6}>
           <Typography variant="h5" gutterBottom color="text.primary">
             Skills
           </Typography>
-          {skills?.map((skill) => (
-            <Card
-              sx={{
-                mb: 2,
-                height: 150,
-                backgroundColor: theme.palette.background.paper,
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <CardContent>
-                <Typography variant="h6" color="primary">
-                  {skill.name}
-                </Typography>
-                <Box mb={2} />
-                <Typography variant="body2" color="text.secondary">
-                  {skill.description}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          <Grid container spacing={2}>
+            {skills?.map((skill, idx) => (
+              <Grid
+                key={`skill-${idx}`}
+                sx={{ flexBasis: { xs: "100%", sm: "49%" } }}
+              >
+                <Card
+                  sx={{
+                    height: 180,
+                    backgroundColor: theme.palette.background.paper,
+                    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                  }}
+                >
+                  <CardContent>
+                    <Typography variant="h6" color="primary">
+                      {skill.name}
+                    </Typography>
+                    <Box mb={2} />
+                    <Typography variant="body2" color="text.secondary">
+                      {skill.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-        <div ref={worksRef}>
+        <Box ref={worksRef}>
           <Typography variant="h5" gutterBottom color="text.primary">
             Works
           </Typography>
@@ -259,7 +270,7 @@ export default function Portofolio() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </Box>
       </Box>
     </Box>
   );
