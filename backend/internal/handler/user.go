@@ -22,6 +22,28 @@ func GetMeID(c echo.Context) error {
 	})
 }
 
+type GetUsernameResponse struct {
+	Username string    `json:"username"`
+}
+
+func GetUsername(c echo.Context)  error {
+	userToken := c.Get("user").(*jwt.Token)
+	claims := userToken.Claims.(jwt.MapClaims)
+
+	id, ok := claims["id"].(string)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	}
+
+	username, err := service.GetUsername(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	var res GetUsernameResponse;
+	res.Username = username
+	return c.JSON(http.StatusOK, res)
+}
+
 type UpdateUsernameRequest struct {
 	Username string    `json:"username"`
 }

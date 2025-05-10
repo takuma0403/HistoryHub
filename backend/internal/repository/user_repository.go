@@ -53,6 +53,14 @@ func GetUserByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
+func GetUserByUsername(username string) (*model.User, error) {
+	var user model.User
+	if err := db.DB.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, errors.New("user not found")
+	}
+	return &user, nil
+}
+
 func GetTmpUserByEmail(email string) (*model.TmpUser, error) {
 	var tmpUser model.TmpUser
 	if err := db.DB.Where("email = ?", email).First(&tmpUser).Error; err != nil {

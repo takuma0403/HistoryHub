@@ -36,6 +36,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(200, "HistoryHub API OK")
 	})
+	e.GET("/profile/:username", handler.GetProfileByUsername)
+	e.GET("/skill/:username", handler.GetSkillByUsername)
 
 	authGroup := e.Group("/auth")
 	authGroup.POST("/signup", handler.SignUp)
@@ -46,7 +48,9 @@ func main() {
 	apiGroup.Use(middleware.JWTMiddleware())
 	apiGroup.GET("/me", handler.GetMeID)
 	apiGroup.GET("/sample", handler.Sample)
-	apiGroup.PUT("/updateUsername", handler.UpdateUsername)
+
+	apiGroup.GET("/username", handler.GetUsername)
+	apiGroup.PUT("/username", handler.UpdateUsername)
 	
 	apiGroup.GET("/profile", handler.GetProfile)
 	apiGroup.POST("/profile", handler.CreateProfile)

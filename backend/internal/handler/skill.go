@@ -74,6 +74,15 @@ func DeleteSkill(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
+type SkillResponse struct {
+	ID          uint      `json:"id"`
+	ProfileID   uint      `json:"profileId"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	IsMainSkill bool      `json:"isMainSkill"`
+
+}
+
 func GetSkill(c echo.Context) error {
 	userToken := c.Get("user").(*jwt.Token)
 	claims := userToken.Claims.(jwt.MapClaims)
@@ -88,5 +97,42 @@ func GetSkill(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, skills)
+	var res []SkillResponse
+	for _, s := range skills {
+		res = append(res, SkillResponse{
+			ID:          s.ID,
+			ProfileID:   s.ProfileID,
+			Name:        s.Name,
+			Description: s.Description,
+			IsMainSkill: s.IsMainSkill,
+		})
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetSkillByUsername(c echo.Context) error {
+	username := c.Param("username")
+	UserID, err := service.GetUserIDByUsername(username)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	skills, err := service.GetSkills(UserID)
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, err.Error())
+	}
+
+	var res []SkillResponse
+	for _, s := range skills {
+		res = append(res, SkillResponse{
+			Name:        s.Name,
+			Description: s.Description,
+			IsMainSkill: s.IsMainSkill,
+		})
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
