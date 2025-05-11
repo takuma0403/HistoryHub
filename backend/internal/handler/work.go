@@ -16,10 +16,10 @@ import (
 
 type GetWorkResponse struct {
 	ID          string `json:"id"`
-	UserID      string `json:"user_id"`
+	UserID      string `json:"userId"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	ImagePath   string `json:"image_path"`
+	ImagePath   string `json:"imagePath"`
 	Link        string `json:"link"`
 	Period      string `json:"period"`
 	Use         string `json:"use"`
