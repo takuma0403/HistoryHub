@@ -24,6 +24,8 @@ func main() {
 	e.Use(echoMiddleware.Logger())
 	e.Use(echoMiddleware.Recover())
 
+	e.Static("/static", "static")
+
 	db.InitDB()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
@@ -38,6 +40,7 @@ func main() {
 	})
 	e.GET("/profile/:username", handler.GetProfileByUsername)
 	e.GET("/skill/:username", handler.GetSkillByUsername)
+	e.GET("/work/:username", handler.GetWorksByUsername)
 
 	authGroup := e.Group("/auth")
 	authGroup.POST("/signup", handler.SignUp)
@@ -61,6 +64,9 @@ func main() {
 	apiGroup.PUT("/skill/:id", handler.UpdateSkill)
 	apiGroup.DELETE("/skill/:id", handler.DeleteSkill)
 
+	apiGroup.POST("/work", handler.CreateWork)
+	apiGroup.PUT("/work/:id", handler.UpadateWork)
+	apiGroup.DELETE("/work/:id", handler.DeleteWork)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
