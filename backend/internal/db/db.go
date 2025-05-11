@@ -26,6 +26,9 @@ func InitDB() {
 	models := []interface{}{
 		&model.User{},
 		&model.TmpUser{},
+		&model.Profile{},
+		&model.Skill{},
+		&model.Work{},
 	}
 	
 	for _, m := range models {

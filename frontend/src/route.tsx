@@ -1,21 +1,51 @@
-import { RouteObject } from 'react-router-dom'
-import ReduxSample from './pages/ReduxSample'
-import NotFound from './pages/NotFound'
-import { Navigate } from 'react-router-dom'
+import { RouteObject } from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import { Navigate } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Verify from "./pages/Verify";
+import Portofolio from "./pages/Portfolio";
+import Home from "./pages/Home";
+import EditPortfolio from "./pages/EditPortfolio";
+import WorkForm from "./pages/WorkForm";
 
 const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <ReduxSample />,
+    path: "/",
+    element: <Home />,
   },
   {
-    path: '/error/404',
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/verify",
+    element: <Verify />,
+  },
+  {
+    path:"/:username",
+    element: <Portofolio />
+  },
+  {
+    path:"/:username/edit",
+    element: <EditPortfolio />
+  },
+  {
+    path: "/error/404",
     element: <NotFound />,
   },
   {
-    path: '*',
+    path: "/workForm",
+    element: <WorkForm/>
+  },
+  {
+    path: "*",
     element: <Navigate to="/error/404" replace />,
   },
-]
+];
 
-export default routes
+export default routes;
