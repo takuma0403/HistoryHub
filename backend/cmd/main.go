@@ -24,6 +24,8 @@ func main() {
 	e.Use(echoMiddleware.Logger())
 	e.Use(echoMiddleware.Recover())
 
+	e.Static("/static", "static")
+
 	db.InitDB()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)

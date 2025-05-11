@@ -3,7 +3,10 @@ package handler
 import (
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/service"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -80,27 +83,53 @@ func CreateWork(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
 	}
 
+	name := c.FormValue("name")
+	description := c.FormValue("description")
+	link := c.FormValue("link")
+	period := c.FormValue("period")
+	use := c.FormValue("use")
 
-	var req CreateWorkRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	imagePath := ""
+	file, err := c.FormFile("image")
+	if err == nil {
+		src, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
+
+		filename := uuid.New().String() + filepath.Ext(file.Filename)
+		dstPath := "static/uploads/" + filename
+
+		dst, err := os.Create(dstPath)
+		if err != nil {
+			return err
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return err
+		}
+
+		imagePath = "/static/uploads/" + filename
 	}
 
 	work := model.Work{
 		UserID:      UserID,
-		Name:        req.Name,
-		Description: req.Description,
-		ImagePath:   req.ImagePath,
-		Link:        req.Link,
-		Period:      req.Period,
-		Use:         req.Use,
+		Name:        name,
+		Description: description,
+		ImagePath:   imagePath,
+		Link:        link,
+		Period:      period,
+		Use:         use,
 	}
 
 	if err := service.CreateWork(work); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, work)
 }
+
 
 type UpadateWorkRequest struct {
 	Name        string `json:"name"`
@@ -110,7 +139,6 @@ type UpadateWorkRequest struct {
 	Period      string `json:"period"`
 	Use         string `json:"use"`
 }
-
 func UpadateWork(c echo.Context) error {
 	userToken := c.Get("user").(*jwt.Token)
 	claims := userToken.Claims.(jwt.MapClaims)
@@ -127,27 +155,67 @@ func UpadateWork(c echo.Context) error {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	var req UpadateWorkRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	name := c.FormValue("name")
+	description := c.FormValue("description")
+	link := c.FormValue("link")
+	period := c.FormValue("period")
+	use := c.FormValue("use")
+
+	existing, err := service.GetWorkByID(uint(id))
+	if err != nil {
+		return c.JSON(http.StatusNotFound, "Work not found")
+	}
+
+	imagePath := existing.ImagePath
+
+	file, err := c.FormFile("image")
+	if err == nil {
+		src, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
+
+		filename := uuid.New().String() + filepath.Ext(file.Filename)
+		dstPath := "static/uploads/" + filename
+
+		dst, err := os.Create(dstPath)
+		if err != nil {
+			return err
+		}
+		defer dst.Close()
+
+		if _, err = io.Copy(dst, src); err != nil {
+			return err
+		}
+
+		if existing.ImagePath != "" {
+			oldPath := "." + existing.ImagePath
+			if err := os.Remove(oldPath); err != nil && !os.IsNotExist(err) {
+				return err
+			}
+		}
+
+		imagePath = "/static/uploads/" + filename
 	}
 
 	work := model.Work{
 		ID:          uint(id),
 		UserID:      UserID,
-		Name:        req.Name,
-		Description: req.Description,
-		ImagePath:   req.ImagePath,
-		Link:        req.Link,
-		Period:      req.Period,
-		Use:         req.Use,
+		Name:        name,
+		Description: description,
+		ImagePath:   imagePath,
+		Link:        link,
+		Period:      period,
+		Use:         use,
 	}
 
 	if err := service.UpdateWork(work); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, work)
 }
+
 
 func DeleteWork(c echo.Context) error {
 	userToken := c.Get("user").(*jwt.Token)

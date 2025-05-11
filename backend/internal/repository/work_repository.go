@@ -29,13 +29,21 @@ func DeleteWorkByID(id uint) error {
 	return nil
 }
 
+func GetWorkByID(id uint)  (*model.Work, error) {
+	var work model.Work
+	if err := db.DB.Where("id = ?", id).First(&work).Error; err != nil {
+		return nil, errors.New("work not found")
+	}
+	return &work, nil
+}
+
 func GetWorksByUserID(UserID uuid.UUID) ([]model.Work, error) {
 	var works []model.Work
 	if err := db.DB.Where("user_id = ?", UserID).Find(&works).Error; err != nil {
 		return nil, err
 	}
 	if len(works) == 0 {
-		return nil, errors.New("no skills found")
+		return nil, errors.New("no works found")
 	}
 	return works, nil
 }

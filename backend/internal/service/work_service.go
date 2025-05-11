@@ -30,6 +30,14 @@ func DeleteWork(WorkID uint) error {
 	return nil
 }
 
+func GetWorkByID(WorkID uint) (*model.Work, error) {
+	work, err := repository.GetWorkByID(WorkID)
+	if err != nil {
+		return nil, err
+	}
+	return work, nil
+}
+
 func GetWorksByUserID(UserID uuid.UUID) ([]model.Work, error) {
 	works, err := repository.GetWorksByUserID(UserID)
 	if err != nil  {
