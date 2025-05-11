@@ -8,7 +8,8 @@ import {
   SkillResponse,
   UpdateSkillRequest,
   UsernameRequest,
-  UsernameResponse
+  UsernameResponse,
+  WorkResponse
 } from './types';
 
 export const userApi = createApi({
@@ -29,6 +30,9 @@ export const userApi = createApi({
     }),
     getSkillsByUsername: builder.query<SkillResponse[], string>({
       query: (username) => `skill/${username}`,
+    }),
+    getWorksByUsername: builder.query<WorkResponse[], string>({
+      query: (username) => `work/${username}`
     }),
     getUsername: builder.query<UsernameResponse, void>({
       query: () => 'api/username'
@@ -81,12 +85,33 @@ export const userApi = createApi({
         body,
       }),
     }),
+    createWork: builder.mutation<void, FormData>({
+      query: (formData) => ({
+        url: 'api/work',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    updateWork: builder.mutation<void, { id: string; formData: FormData }>({
+      query: ({id, formData}) => ({
+        url: `api/work/${id}`,
+        method: 'PUT',
+        body: formData,
+      }),
+    }),
+    deleteWork: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `api/work/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
 export const {
   useGetProfileByUsernameQuery,
   useGetSkillsByUsernameQuery,
+  useGetWorksByUsernameQuery,
   useGetUsernameQuery,
   useUpdateUsernameMutation,
   useGetProfileQuery,
@@ -96,4 +121,7 @@ export const {
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useDeleteSkillMutation,
+  useCreateWorkMutation,
+  useUpdateWorkMutation,
+  useDeleteWorkMutation,
 } = userApi;

@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CircularProgress,
-  Alert,
   Tabs,
   Tab,
   useTheme,
@@ -16,20 +15,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetProfileByUsernameQuery,
   useGetSkillsByUsernameQuery,
+  useGetWorksByUsernameQuery,
 } from "../features/user/userApi";
+import BASE_URL from "../constants/api";
 
 export default function Portofolio() {
   const { username } = useParams<{ username: string }>();
-  const {
-    data: profile,
-    isLoading: isProfileLoading,
-    error: profileError,
-  } = useGetProfileByUsernameQuery(username ?? "");
-  const {
-    data: skills,
-    isLoading: isSkillsLoading,
-    error: skillsError,
-  } = useGetSkillsByUsernameQuery(username ?? "");
+  const { data: profile, isLoading: isProfileLoading } =
+    useGetProfileByUsernameQuery(username ?? "");
+  const { data: skills, isLoading: isSkillsLoading } =
+    useGetSkillsByUsernameQuery(username ?? "");
+  const { data: works, isLoading: isWorksLoading } = useGetWorksByUsernameQuery(
+    username ?? ""
+  );
+
+  console.log(works);
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -43,19 +43,10 @@ export default function Portofolio() {
     }
   }, [isProfileLoading, profile, navigate]);
 
-  if (isProfileLoading || isSkillsLoading)
+  if (isProfileLoading || isSkillsLoading || isWorksLoading)
     return (
       <Box display="flex" justifyContent="center" mt={4}>
         <CircularProgress color="primary" />
-      </Box>
-    );
-
-  if (profileError || skillsError)
-    return (
-      <Box maxWidth={600} mx="auto" mt={4}>
-        <Alert severity="error">
-          プロフィールまたはスキルの取得に失敗しました
-        </Alert>
       </Box>
     );
 
@@ -86,7 +77,7 @@ export default function Portofolio() {
   };
 
   return (
-    <Box display="flex" height="85vh" overflow="hidden">
+    <Box display="flex" height="90vh" overflow="hidden">
       {/* プロフィールセクション */}
       <Box
         sx={{
@@ -102,12 +93,12 @@ export default function Portofolio() {
         }}
       >
         <Box>
-          <Typography variant="h5" color="text.primary" gutterBottom>
-            Profile
+          <Typography variant="h5" color="text.secondary" gutterBottom>
+            ABOUT
           </Typography>
           <Divider sx={{ mb: 2 }} />
 
-          <Typography variant="h6" color="text.secondary" mb={2}>
+          <Typography variant="h5" color="text.primary" mb={2}>
             {lastName} {firstName}
           </Typography>
 
@@ -123,15 +114,15 @@ export default function Portofolio() {
               <>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  color="text.primary"
                   fontWeight="bold"
                 >
                   生年月日
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary">
                   :
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary">
                   {formatJapaneseDate(birthDate)}
                 </Typography>
               </>
@@ -141,15 +132,19 @@ export default function Portofolio() {
               <>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  color="text.primary"
                   fontWeight="bold"
                 >
                   学校
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary">
                   :
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ whiteSpace: "pre-line" }}
+                >
                   {school}
                 </Typography>
               </>
@@ -159,15 +154,19 @@ export default function Portofolio() {
               <>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  color="text.primary"
                   fontWeight="bold"
                 >
                   趣味
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.primary">
                   :
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ whiteSpace: "pre-line" }}
+                >
                   {hobby}
                 </Typography>
               </>
@@ -183,13 +182,13 @@ export default function Portofolio() {
           sx={{ alignSelf: "flex-end" }}
         >
           <Tab
-            label="▶ Skills"
-            onClick={() => scrollToElement(skillsRef, -16)}
+            label="▶ Works"
+            onClick={() => scrollToElement(worksRef, -16)}
             sx={{ color: theme.palette.primary.main }}
           />
           <Tab
-            label="▶ Works"
-            onClick={() => scrollToElement(worksRef, -16)}
+            label="▶ Skills"
+            onClick={() => scrollToElement(skillsRef, -16)}
             sx={{ color: theme.palette.primary.main }}
           />
         </Tabs>
@@ -214,15 +213,196 @@ export default function Portofolio() {
           },
         }}
       >
-        <Box ref={skillsRef} mb={6}>
-          <Typography variant="h5" gutterBottom color="text.primary">
-            Skills
+        <Box ref={worksRef} mb={6}>
+          <Typography variant="h5" gutterBottom color="text.secondary">
+            WORKS
+          </Typography>
+          {works?.map((work, idx) => (
+            <Card
+              key={`work-${idx}`}
+              sx={{
+                mb: 2,
+                height: "70vh",
+                backgroundColor: theme.palette.background.paper,
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <CardContent sx={{ flex: 1, display: "flex", gap: 2 }}>
+                <Box
+                  sx={{
+                    width: "50%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Box>
+                    <Typography variant="h4" color="primary" gutterBottom>
+                      {work.name}
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: 210,
+                        backgroundColor: "#f0f0f0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                        borderRadius: 2,
+                        border: "1px solid #ccc",
+                        boxShadow: 2,
+                      }}
+                    >
+                      {work.imagePath ? (
+                        <Box
+                          component="img"
+                          src={BASE_URL + work.imagePath}
+                          alt={work.name}
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: 2,
+                            transition: "transform 0.3s",
+                            "&:hover": {
+                              transform: "scale(1.03)",
+                            },
+                          }}
+                        />
+                      ) : (
+                        <Typography variant="caption" color="text.primary">
+                          No Image
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                    }}
+                  >
+                    {work.period && (
+                      <Typography variant="body1" color="text.primary">
+                        <strong>制作期間：</strong> {work.period}
+                      </Typography>
+                    )}
+
+                    {work.use && (
+                      <Typography variant="body1" color="text.primary">
+                        <strong>使用技術：</strong> {work.use}
+                      </Typography>
+                    )}
+
+                    {work.link &&
+                      (() => {
+                        try {
+                          const urlObj = new URL(work.link);
+                          return (
+                            <Box
+                              sx={{
+                                border: "1px solid #ccc",
+                                borderRadius: 2,
+                                p: 2,
+                                mt: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2,
+                                backgroundColor: "#fafafa",
+                              }}
+                            >
+                              <Box>
+                                <img
+                                  src={`https://www.google.com/s2/favicons?domain_url=${urlObj.origin}`}
+                                  alt="favicon"
+                                  style={{ width: 24, height: 24 }}
+                                />
+                              </Box>
+
+                              <Box sx={{ overflow: "hidden" }}>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    fontWeight: "bold",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  <a
+                                    href={work.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      textDecoration: "none",
+                                      color: theme.palette.primary.main,
+                                    }}
+                                  >
+                                    {work.link}
+                                  </a>
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  color="text.primary"
+                                  sx={{ wordBreak: "break-all" }}
+                                >
+                                  {urlObj.hostname}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          );
+                        } catch {
+                          return null;
+                        }
+                      })()}
+                  </Box>
+                </Box>
+
+                {work.description && (
+                  <Box
+                    sx={{
+                      width: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      color="text.primary"
+                      sx={{
+                        textAlign: "left",
+                        whiteSpace: "pre-wrap",
+                        px: 2,
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {work.description}
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+
+        <Box ref={skillsRef}>
+          <Typography variant="h5" gutterBottom color="text.secondary">
+            SKILLS
           </Typography>
           <Grid container spacing={2}>
             {skills?.map((skill, idx) => (
               <Grid
                 key={`skill-${idx}`}
-                sx={{ flexBasis: { xs: "100%", sm: "49%" } }}
+                sx={{ flexBasis: { xs: "100%", sm: "32%" } }}
               >
                 <Card
                   sx={{
@@ -232,11 +412,11 @@ export default function Portofolio() {
                   }}
                 >
                   <CardContent>
-                    <Typography variant="h6" color="primary">
+                    <Typography variant="h4" color="primary">
                       {skill.name}
                     </Typography>
                     <Box mb={2} />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.primary">
                       {skill.description}
                     </Typography>
                   </CardContent>
@@ -244,32 +424,6 @@ export default function Portofolio() {
               </Grid>
             ))}
           </Grid>
-        </Box>
-
-        <Box ref={worksRef}>
-          <Typography variant="h5" gutterBottom color="text.primary">
-            Works
-          </Typography>
-          {[...Array(5)].map((_, i) => (
-            <Card
-              key={`work-${i}`}
-              sx={{
-                mb: 2,
-                height: 200,
-                backgroundColor: theme.palette.background.paper,
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <CardContent>
-                <Typography variant="subtitle1" color="primary">
-                  Work #{i + 1}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  作品の説明です（スクロール確認用）
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
         </Box>
       </Box>
     </Box>

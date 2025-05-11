@@ -7,6 +7,7 @@ import Verify from "./pages/Verify";
 import Portofolio from "./pages/Portfolio";
 import Home from "./pages/Home";
 import EditPortfolio from "./pages/EditPortfolio";
+import WorkForm from "./pages/WorkForm";
 
 const routes: RouteObject[] = [
   {
@@ -36,6 +37,10 @@ const routes: RouteObject[] = [
   {
     path: "/error/404",
     element: <NotFound />,
+  },
+  {
+    path: "/workForm",
+    element: <WorkForm/>
   },
   {
     path: "*",
