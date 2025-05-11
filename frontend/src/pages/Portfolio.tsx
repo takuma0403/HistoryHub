@@ -140,7 +140,11 @@ export default function Portofolio() {
                 <Typography variant="body2" color="text.primary">
                   :
                 </Typography>
-                <Typography variant="body2" color="text.primary">
+                <Typography
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ whiteSpace: "pre-line" }}
+                >
                   {school}
                 </Typography>
               </>
@@ -158,7 +162,11 @@ export default function Portofolio() {
                 <Typography variant="body2" color="text.primary">
                   :
                 </Typography>
-                <Typography variant="body2" color="text.primary">
+                <Typography
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ whiteSpace: "pre-line" }}
+                >
                   {hobby}
                 </Typography>
               </>
