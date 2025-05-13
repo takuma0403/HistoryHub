@@ -3,26 +3,18 @@ package handler
 import (
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/service"
+	"HistoryHub/internal/util"
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 func CreateProfile(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	idStr, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token format")
-	}
-
-	id, err := uuid.Parse(idStr)
+	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	var profile model.Profile
@@ -30,7 +22,7 @@ func CreateProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	profile.UserID = id
+	profile.UserID = UserID
 
 	if err := service.CreateProfile(profile); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -41,17 +33,9 @@ func CreateProfile(c echo.Context) error {
 
 
 func UpdateProfile(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	idStr, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
-	}
-
-	id, err := uuid.Parse(idStr)
+	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	var profile model.Profile
@@ -59,7 +43,7 @@ func UpdateProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	profile.UserID = id
+	profile.UserID = UserID
 
 	if err := service.UpdateProfile(profile); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -79,15 +63,12 @@ type ProfileResponse struct {
 }
 
 func GetProfile(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	id, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
-	profile, err := service.GetProfile(id)
+	profile, err := service.GetProfile(UserID)
 
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())

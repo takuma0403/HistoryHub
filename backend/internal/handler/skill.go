@@ -3,20 +3,17 @@ package handler
 import (
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/service"
+	"HistoryHub/internal/util"
 	"net/http"
 	"strconv"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
 func CreateSkill(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	id, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	var skill model.Skill
@@ -24,7 +21,7 @@ func CreateSkill(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := service.CreateSkill(id, skill); err != nil {
+	if err := service.CreateSkill(UserID, skill); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
@@ -32,12 +29,9 @@ func CreateSkill(c echo.Context) error {
 }
 
 func UpdateSkill(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	UserID, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -57,12 +51,9 @@ func UpdateSkill(c echo.Context) error {
 }
 
 func DeleteSkill(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	UserID, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -84,15 +75,12 @@ type SkillResponse struct {
 }
 
 func GetSkill(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	id, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
-	skills, err := service.GetSkills(id)
+	skills, err := service.GetSkills(UserID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}

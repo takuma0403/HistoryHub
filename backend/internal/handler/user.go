@@ -2,6 +2,7 @@ package handler
 
 import (
 	"HistoryHub/internal/service"
+	"HistoryHub/internal/util"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -27,15 +28,12 @@ type GetUsernameResponse struct {
 }
 
 func GetUsername(c echo.Context)  error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	id, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
-	username, err := service.GetUsername(id)
+	username, err := service.GetUsername(UserID)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -53,14 +51,13 @@ func UpdateUsername(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, "Invalid request")
 	}
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
 
-	id, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token")
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
-	err := service.UpdateUsername(id, req.Username)
+
+	err = service.UpdateUsername(UserID, req.Username)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
