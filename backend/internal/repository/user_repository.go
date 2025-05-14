@@ -4,6 +4,8 @@ import (
 	"HistoryHub/internal/db"
 	"HistoryHub/internal/model"
 	"errors"
+
+	"github.com/google/uuid"
 )
 
 var ErrEmailAlreadyUsed = errors.New("this email address is already used")
@@ -37,7 +39,7 @@ func UpdateUser(user *model.User) error {
 	return db.DB.Save(user).Error
 }
 
-func GetUserByID(id string) (*model.User, error) {
+func GetUserByID(id uuid.UUID) (*model.User, error) {
 	var user model.User
 	if err := db.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, errors.New("user not found")

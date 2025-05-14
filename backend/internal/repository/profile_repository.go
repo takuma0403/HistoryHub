@@ -4,6 +4,8 @@ import (
 	"HistoryHub/internal/db"
 	"HistoryHub/internal/model"
 	"errors"
+
+	"github.com/google/uuid"
 )
 
 func CreateProfile(profile model.Profile) error {
@@ -29,7 +31,7 @@ func GetProfileByID(id string)  (*model.Profile, error) {
 	return &profile, nil
 }
 
-func GetProfileByUserID(UserID string)  (*model.Profile, error) {
+func GetProfileByUserID(UserID uuid.UUID)  (*model.Profile, error) {
 	var profile model.Profile
 	if err := db.DB.Where("user_id = ?", UserID).First(&profile).Error; err != nil {
 		return nil, errors.New("profile not found")

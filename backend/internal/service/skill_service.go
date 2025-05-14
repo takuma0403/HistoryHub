@@ -5,9 +5,11 @@ import (
 	"HistoryHub/internal/repository"
 	"errors"
 	"time"
+
+	"github.com/google/uuid"
 )
 
-func CreateSkill(UserID string, skill model.Skill) error {
+func CreateSkill(UserID uuid.UUID, skill model.Skill) error {
 	profile, err := repository.GetProfileByUserID(UserID)
 	if err != nil {
 		return err
@@ -23,7 +25,7 @@ func CreateSkill(UserID string, skill model.Skill) error {
 	return nil
 }
 
-func UpdateSkill(UserID string, skill model.Skill) error {
+func UpdateSkill(UserID uuid.UUID, skill model.Skill) error {
 	profile, _ := repository.GetProfileByUserID(UserID)
 	preSkill, _ := repository.GetSkillByID(skill.ID)
 	if profile.ID != preSkill.ProfileID {
@@ -37,7 +39,7 @@ func UpdateSkill(UserID string, skill model.Skill) error {
 	return nil
 }
 
-func DeleteSkill(UserID string, id uint) error {
+func DeleteSkill(UserID uuid.UUID, id uint) error {
 	profile, _ := repository.GetProfileByUserID(UserID)
 	preSkill, _ := repository.GetSkillByID(id)
 	if profile.ID != preSkill.ProfileID {
@@ -49,7 +51,7 @@ func DeleteSkill(UserID string, id uint) error {
 	return nil
 }
 
-func GetSkills(UserID string) ([]model.Skill, error) {
+func GetSkills(UserID uuid.UUID) ([]model.Skill, error) {
 	profile, err := repository.GetProfileByUserID(UserID)
 	if err != nil  {
 		return nil, err

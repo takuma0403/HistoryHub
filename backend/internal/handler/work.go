@@ -3,13 +3,13 @@ package handler
 import (
 	"HistoryHub/internal/model"
 	"HistoryHub/internal/service"
+	"HistoryHub/internal/util"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -25,17 +25,30 @@ type GetWorkResponse struct {
 	Use         string `json:"use"`
 }
 
+type CreateWorkRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImagePath   string `json:"imagePath"`
+	Link        string `json:"link"`
+	Period      string `json:"period"`
+	Use         string `json:"use"`
+}
+
+type UpadateWorkRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImagePath   string `json:"imagePath"`
+	Link        string `json:"link"`
+	Period      string `json:"period"`
+	Use         string `json:"use"`
+}
+
 func GetWorksByUsername(c echo.Context) error {
 	username := c.Param("username")
-	UserIDstr, err := service.GetUserIDByUsername(username)
+	UserID, err := service.GetUserIDByUsername(username)
 
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
-	}
-
-	UserID, err := uuid.Parse(UserIDstr)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
 	}
 
 	works, err := service.GetWorksByUserID(UserID)
@@ -59,28 +72,10 @@ func GetWorksByUsername(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-
-type CreateWorkRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImagePath   string `json:"image_path"`
-	Link        string `json:"link"`
-	Period      string `json:"period"`
-	Use         string `json:"use"`
-}
-
 func CreateWork(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	UserIDStr, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token format")
-	}
-
-	UserID, err := uuid.Parse(UserIDStr)
+	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	name := c.FormValue("name")
@@ -130,27 +125,10 @@ func CreateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, work)
 }
 
-
-type UpadateWorkRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImagePath   string `json:"image_path"`
-	Link        string `json:"link"`
-	Period      string `json:"period"`
-	Use         string `json:"use"`
-}
 func UpadateWork(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	UserIDStr, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token format")
-	}
-
-	UserID, err := uuid.Parse(UserIDStr)
+	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -216,19 +194,10 @@ func UpadateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, work)
 }
 
-
 func DeleteWork(c echo.Context) error {
-	userToken := c.Get("user").(*jwt.Token)
-	claims := userToken.Claims.(jwt.MapClaims)
-
-	UserIDStr, ok := claims["id"].(string)
-	if !ok {
-		return c.JSON(http.StatusUnauthorized, "Invalid token format")
-	}
-
-	_, err := uuid.Parse(UserIDStr)
+	_, err := util.GetUserIDFromJWT(c)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Invalid UUID")
+		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
 	id, _ := strconv.Atoi(c.Param("id"))

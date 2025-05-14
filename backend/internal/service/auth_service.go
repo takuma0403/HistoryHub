@@ -6,8 +6,6 @@ import (
 	"HistoryHub/internal/repository"
 	"HistoryHub/internal/util"
 	"errors"
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -52,7 +50,7 @@ func VerifyEmail(email, code string) error {
 		return errors.New("invalid verification code")
 	}
 
-	username := _sanitizeUsername(tmpUser.Email)
+	username := util.SanitizeUsername(tmpUser.Email)
 
 	user := &model.User{
 		ID:        uuid.New(),
@@ -86,14 +84,4 @@ func Login(email, password string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
-}
-
-func _sanitizeUsername(input string) string {
-	at := strings.Index(input, "@")
-	if at == -1 {
-		at = len(input)
-	}
-	base := input[:at]
-	re := regexp.MustCompile(`[^a-zA-Z0-9_-]`)
-	return re.ReplaceAllString(strings.ToLower(base), "")
 }
