@@ -10,68 +10,24 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateSkill(c echo.Context) error {
-	UserID, err := util.GetUserIDFromJWT(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	var skill model.Skill
-	if err := c.Bind(&skill); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	if err := service.CreateSkill(UserID, skill); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, nil)
+type GetSkillResponse struct {
+	ID          uint   `json:"id"`
+	ProfileID   uint   `json:"profileId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsMainSkill bool   `json:"isMainSkill"`
 }
 
-func UpdateSkill(c echo.Context) error {
-	UserID, err := util.GetUserIDFromJWT(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	var skill model.Skill
-	if err := c.Bind(&skill); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	skill.ID = uint(id)
-
-	if err := service.UpdateSkill(UserID, skill); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, nil)
+type CreateSkillRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsMainSkill bool   `json:"isMainSkill"`
 }
 
-func DeleteSkill(c echo.Context) error {
-	UserID, err := util.GetUserIDFromJWT(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	if err := service.DeleteSkill(UserID, uint(id)); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.NoContent(http.StatusNoContent)
-}
-
-type SkillResponse struct {
-	ID          uint      `json:"id"`
-	ProfileID   uint      `json:"profileId"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	IsMainSkill bool      `json:"isMainSkill"`
-
+type UpadateSkillRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	IsMainSkill bool   `json:"isMainSkill"`
 }
 
 func GetSkill(c echo.Context) error {
@@ -85,9 +41,9 @@ func GetSkill(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	var res []SkillResponse
+	var res []GetSkillResponse
 	for _, s := range skills {
-		res = append(res, SkillResponse{
+		res = append(res, GetSkillResponse{
 			ID:          s.ID,
 			ProfileID:   s.ProfileID,
 			Name:        s.Name,
@@ -113,9 +69,9 @@ func GetSkillByUsername(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	var res []SkillResponse
+	var res []GetSkillResponse
 	for _, s := range skills {
-		res = append(res, SkillResponse{
+		res = append(res, GetSkillResponse{
 			Name:        s.Name,
 			Description: s.Description,
 			IsMainSkill: s.IsMainSkill,
@@ -123,4 +79,70 @@ func GetSkillByUsername(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func CreateSkill(c echo.Context) error {
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	var req CreateSkillRequest
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	skill := model.Skill{
+		Name:        req.Name,
+		Description: req.Description,
+		IsMainSkill: req.IsMainSkill,
+	}
+
+	if err := service.CreateSkill(UserID, skill); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, nil)
+}
+
+func UpdateSkill(c echo.Context) error {
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	var req UpadateSkillRequest
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	skill := model.Skill{
+		ID:          uint(id),
+		Name:        req.Name,
+		Description: req.Description,
+		IsMainSkill: req.IsMainSkill,
+	}
+
+	if err := service.UpdateSkill(UserID, skill); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func DeleteSkill(c echo.Context) error {
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if err := service.DeleteSkill(UserID, uint(id)); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

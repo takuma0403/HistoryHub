@@ -11,50 +11,25 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateProfile(c echo.Context) error {
-	UserID, err := util.GetUserIDFromJWT(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	var profile model.Profile
-	if err := c.Bind(&profile); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	profile.UserID = UserID
-
-	if err := service.CreateProfile(profile); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, nil)
-}
-
-
-func UpdateProfile(c echo.Context) error {
-	UserID, err := util.GetUserIDFromJWT(c)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
-	}
-
-	var profile model.Profile
-	if err := c.Bind(&profile); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	profile.UserID = UserID
-
-	if err := service.UpdateProfile(profile); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, nil)
-}
-
-type ProfileResponse struct {
+type GetProfileResponse struct {
 	ID        uint      `json:"id"`
 	UserID    uuid.UUID `json:"userId"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	BirthDate time.Time `json:"birthDate"`
+	School    string    `json:"school"`
+	Hobby     string    `json:"hobby"`
+}
+
+type CreateProfileRequest struct {
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	BirthDate time.Time `json:"birthDate"`
+	School    string    `json:"school"`
+	Hobby     string    `json:"hobby"`
+}
+
+type UpdateProfileRequest struct {
 	FirstName string    `json:"firstName"`
 	LastName  string    `json:"lastName"`
 	BirthDate time.Time `json:"birthDate"`
@@ -74,7 +49,7 @@ func GetProfile(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	res := &ProfileResponse{
+	res := &GetProfileResponse{
 		ID:        profile.ID,
 		UserID:    profile.UserID,
 		FirstName: profile.FirstName,
@@ -101,7 +76,7 @@ func GetProfileByUsername(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
 
-	res := &ProfileResponse{
+	res := &GetProfileResponse{
 		FirstName: profile.FirstName,
 		LastName:  profile.LastName,
 		BirthDate: profile.BirthDate,
@@ -110,4 +85,58 @@ func GetProfileByUsername(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func CreateProfile(c echo.Context) error {
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	var req CreateProfileRequest
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	profile := model.Profile{
+		UserID:    UserID,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		BirthDate: req.BirthDate,
+		School:    req.School,
+		Hobby:     req.Hobby,
+	}
+
+	if err := service.CreateProfile(profile); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, nil)
+}
+
+func UpdateProfile(c echo.Context) error {
+	UserID, err := util.GetUserIDFromJWT(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	var req UpdateProfileRequest
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	profile := model.Profile{
+		UserID:    UserID,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+		BirthDate: req.BirthDate,
+		School:    req.School,
+		Hobby:     req.Hobby,
+	}
+
+	if err := service.UpdateProfile(profile); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, nil)
 }

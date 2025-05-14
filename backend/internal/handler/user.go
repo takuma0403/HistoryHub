@@ -9,10 +9,14 @@ import (
 )
 
 type GetUsernameResponse struct {
-	Username string    `json:"username"`
+	Username string `json:"username"`
 }
 
-func GetUsername(c echo.Context)  error {
+type UpdateUsernameRequest struct {
+	Username string `json:"username"`
+}
+
+func GetUsername(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, err.Error())
@@ -22,17 +26,13 @@ func GetUsername(c echo.Context)  error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	var res GetUsernameResponse;
+	var res GetUsernameResponse
 	res.Username = username
 	return c.JSON(http.StatusOK, res)
 }
 
-type UpdateUsernameRequest struct {
-	Username string    `json:"username"`
-}
-
 func UpdateUsername(c echo.Context) error {
-	var req UpdateUsernameRequest;
+	var req UpdateUsernameRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, "Invalid request")
 	}

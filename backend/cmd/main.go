@@ -42,8 +42,8 @@ func main() {
 	publicAPI := e.Group("/public")
 
 	publicAPI.GET("/profile/:username", handler.GetProfileByUsername)
-	publicAPI.GET("/skills/:username", handler.GetSkillByUsername)
-	publicAPI.GET("/works/:username", handler.GetWorksByUsername)
+	publicAPI.GET("/skill/:username", handler.GetSkillByUsername)
+	publicAPI.GET("/work/:username", handler.GetWorksByUsername)
 
 	auth := e.Group("/auth")
 	auth.POST("/signup", handler.SignUp)

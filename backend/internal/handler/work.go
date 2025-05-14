@@ -25,6 +25,24 @@ type GetWorkResponse struct {
 	Use         string `json:"use"`
 }
 
+type CreateWorkRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImagePath   string `json:"imagePath"`
+	Link        string `json:"link"`
+	Period      string `json:"period"`
+	Use         string `json:"use"`
+}
+
+type UpadateWorkRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ImagePath   string `json:"imagePath"`
+	Link        string `json:"link"`
+	Period      string `json:"period"`
+	Use         string `json:"use"`
+}
+
 func GetWorksByUsername(c echo.Context) error {
 	username := c.Param("username")
 	UserID, err := service.GetUserIDByUsername(username)
@@ -52,16 +70,6 @@ func GetWorksByUsername(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, res)
-}
-
-
-type CreateWorkRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImagePath   string `json:"image_path"`
-	Link        string `json:"link"`
-	Period      string `json:"period"`
-	Use         string `json:"use"`
 }
 
 func CreateWork(c echo.Context) error {
@@ -117,15 +125,6 @@ func CreateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, work)
 }
 
-
-type UpadateWorkRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImagePath   string `json:"image_path"`
-	Link        string `json:"link"`
-	Period      string `json:"period"`
-	Use         string `json:"use"`
-}
 func UpadateWork(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -194,7 +193,6 @@ func UpadateWork(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, work)
 }
-
 
 func DeleteWork(c echo.Context) error {
 	_, err := util.GetUserIDFromJWT(c)
