@@ -26,20 +26,20 @@ export const userApi = createApi({
   }),
   endpoints: (builder) => ({
     getProfileByUsername: builder.query<profileResponse, string>({
-      query: (username) => `profile/${username}`,
+      query: (username) => `public/profile/${username}`,
     }),
     getSkillsByUsername: builder.query<SkillResponse[], string>({
-      query: (username) => `skill/${username}`,
+      query: (username) => `public/skill/${username}`,
     }),
     getWorksByUsername: builder.query<WorkResponse[], string>({
-      query: (username) => `work/${username}`
+      query: (username) => `public/work/${username}`
     }),
     getUsername: builder.query<UsernameResponse, void>({
-      query: () => 'api/username'
+      query: () => 'api/user/username'
     }),
     updateUsername: builder.mutation<void, UsernameRequest>({
       query: (body) => ({
-        url: 'api/username',
+        url: 'api/user/username',
         method: 'PUT',
         body,
       }),
