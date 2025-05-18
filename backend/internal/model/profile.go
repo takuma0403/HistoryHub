@@ -7,14 +7,13 @@ import (
 )
 
 type Profile struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement"`
-	UserID    uuid.UUID `gorm:"type:uuid;not null;uniqueIndex"`
-	LastName  string    `gorm:"not null"`
-	FirstName string    `gorm:"not null"`
-	BirthDate time.Time
-	School    string
-	Hobby     string
-	Skills    []Skill   `gorm:"foreignKey:ProfileID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt time.Time `gorm:"not null"`
-	UpdatedAt time.Time `gorm:"not null"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey;column:id"`
+	UserID    uuid.UUID `gorm:"type:uuid;not null;uniqueIndex;column:user_id"`
+	LastName  string    `gorm:"not null;column:last_name"`
+	FirstName string    `gorm:"not null;column:first_name"`
+	BirthDate time.Time `gorm:"column:birth_date"`
+	School    string    `gorm:"column:school"`
+	Hobby     string    `gorm:"column:hobby"`
+	CreatedAt time.Time `gorm:"not null;column:created_at"`
+	UpdatedAt time.Time `gorm:"not null;column:updated_at"`
 }

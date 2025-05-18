@@ -8,21 +8,20 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type GetWorkResponse struct {
-	ID          string `json:"id"`
-	UserID      string `json:"userId"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ImagePath   string `json:"imagePath"`
-	Link        string `json:"link"`
-	Period      string `json:"period"`
-	Use         string `json:"use"`
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"userId"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	ImagePath   string    `json:"imagePath"`
+	Link        string    `json:"link"`
+	Period      string    `json:"period"`
+	Use         string    `json:"use"`
 }
 
 type CreateWorkRequest struct {
@@ -59,8 +58,8 @@ func GetWorksByUsername(c echo.Context) error {
 	var res []GetWorkResponse
 	for _, work := range works {
 		res = append(res, GetWorkResponse{
-			ID:          strconv.FormatUint(uint64(work.ID), 10),
-			UserID:      work.UserID.String(),
+			ID:          work.ID,
+			UserID:      work.UserID,
 			Name:        work.Name,
 			Description: work.Description,
 			ImagePath:   work.ImagePath,
@@ -110,6 +109,7 @@ func CreateWork(c echo.Context) error {
 	}
 
 	work := model.Work{
+		ID:          uuid.New(),
 		UserID:      UserID,
 		Name:        name,
 		Description: description,
@@ -131,7 +131,12 @@ func UpadateWork(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
-	id, _ := strconv.Atoi(c.Param("id"))
+	idParam := c.Param("id")
+	id, err := uuid.Parse(idParam)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
 	name := c.FormValue("name")
 	description := c.FormValue("description")
@@ -139,7 +144,7 @@ func UpadateWork(c echo.Context) error {
 	period := c.FormValue("period")
 	use := c.FormValue("use")
 
-	existing, err := service.GetWorkByID(uint(id))
+	existing, err := service.GetWorkByID(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, "Work not found")
 	}
@@ -178,7 +183,7 @@ func UpadateWork(c echo.Context) error {
 	}
 
 	work := model.Work{
-		ID:          uint(id),
+		ID:          id,
 		UserID:      UserID,
 		Name:        name,
 		Description: description,
@@ -200,9 +205,14 @@ func DeleteWork(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, err.Error())
 	}
 
-	id, _ := strconv.Atoi(c.Param("id"))
+	idParam := c.Param("id")
+	id, err := uuid.Parse(idParam)
 
-	if err := service.DeleteWork(uint(id)); err != nil {
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := service.DeleteWork(id); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, nil)

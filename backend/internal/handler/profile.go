@@ -12,7 +12,7 @@ import (
 )
 
 type GetProfileResponse struct {
-	ID        uint      `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"userId"`
 	FirstName string    `json:"firstName"`
 	LastName  string    `json:"lastName"`

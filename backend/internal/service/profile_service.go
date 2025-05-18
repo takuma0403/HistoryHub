@@ -9,6 +9,14 @@ import (
 	"github.com/google/uuid"
 )
 
+func GetProfile(UserID uuid.UUID) (*model.Profile, error) {
+	profile, err := repository.GetProfileByUserID(UserID)
+	if err != nil {
+		return nil, err
+	}
+	return profile, nil
+}
+
 func CreateProfile(profile model.Profile) error {
 	preProfile, _ := repository.GetProfileByUserID(profile.UserID)
 
@@ -16,6 +24,7 @@ func CreateProfile(profile model.Profile) error {
 		return errors.New("profile already created")
 	}
 
+	profile.ID = uuid.New()
 	profile.CreatedAt = time.Now()
 	profile.UpdatedAt = time.Now()
 
@@ -43,12 +52,4 @@ func UpdateProfile(profile model.Profile) error {
 		return err
 	}
 	return nil
-}
-
-func GetProfile(UserID uuid.UUID) (*model.Profile, error) {
-	profile, err := repository.GetProfileByUserID(UserID)
-	if err != nil  {
-		return nil, err
-	}
-	return profile, nil
 }
