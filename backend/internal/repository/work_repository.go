@@ -8,7 +8,28 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetWorkByID(id uuid.UUID) (*model.Work, error) {
+func CreateWork(work model.Work) error {
+	if err := db.DB.Create(&work).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateWork(work model.Work) error {	
+	if err := db.DB.Save(&work).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteWorkByID(id uint) error {
+	if err := db.DB.Delete(&model.Work{}, id).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetWorkByID(id uint)  (*model.Work, error) {
 	var work model.Work
 	if err := db.DB.Where("id = ?", id).First(&work).Error; err != nil {
 		return nil, errors.New("work not found")
@@ -25,25 +46,4 @@ func GetWorksByUserID(UserID uuid.UUID) ([]model.Work, error) {
 		return nil, errors.New("no works found")
 	}
 	return works, nil
-}
-
-func CreateWork(work model.Work) error {
-	if err := db.DB.Create(&work).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func UpdateWork(work model.Work) error {
-	if err := db.DB.Save(&work).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func DeleteWorkByID(id uuid.UUID) error {
-	if err := db.DB.Delete(&model.Work{}, id).Error; err != nil {
-		return err
-	}
-	return nil
 }

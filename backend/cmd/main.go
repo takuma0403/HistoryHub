@@ -38,40 +38,35 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(200, "HistoryHub API OK")
 	})
+	e.GET("/profile/:username", handler.GetProfileByUsername)
+	e.GET("/skill/:username", handler.GetSkillByUsername)
+	e.GET("/work/:username", handler.GetWorksByUsername)
 
-	publicAPI := e.Group("/public")
+	authGroup := e.Group("/auth")
+	authGroup.POST("/signup", handler.SignUp)
+	authGroup.POST("/verify", handler.VerifyEmail)
+	authGroup.POST("/login", handler.Login)
 
-	publicAPI.GET("/profile/:username", handler.GetProfileByUsername)
-	publicAPI.GET("/skill/:username", handler.GetSkillByUsername)
-	publicAPI.GET("/work/:username", handler.GetWorksByUsername)
+	apiGroup := e.Group("/api")
+	apiGroup.Use(middleware.JWTMiddleware())
+	apiGroup.GET("/me", handler.GetMeID)
+	apiGroup.GET("/sample", handler.Sample)
 
-	auth := e.Group("/auth")
-	auth.POST("/signup", handler.SignUp)
-	auth.POST("/verify", handler.VerifyEmail)
-	auth.POST("/login", handler.Login)
+	apiGroup.GET("/username", handler.GetUsername)
+	apiGroup.PUT("/username", handler.UpdateUsername)
+	
+	apiGroup.GET("/profile", handler.GetProfile)
+	apiGroup.POST("/profile", handler.CreateProfile)
+	apiGroup.PUT("/profile", handler.UpdateProfile)
 
-	api := e.Group("/api")
-	api.Use(middleware.JWTMiddleware())
+	apiGroup.GET("/skill", handler.GetSkill)
+	apiGroup.POST("/skill", handler.CreateSkill)
+	apiGroup.PUT("/skill/:id", handler.UpdateSkill)
+	apiGroup.DELETE("/skill/:id", handler.DeleteSkill)
 
-	user := api.Group("/user")
-	user.GET("/username", handler.GetUsername)
-	user.PUT("/username", handler.UpdateUsername)
-
-	profile := api.Group("/profile")
-	profile.GET("", handler.GetProfile)
-	profile.POST("", handler.CreateProfile)
-	profile.PUT("", handler.UpdateProfile)
-
-	skill := api.Group("/skill")
-	skill.GET("", handler.GetSkill)
-	skill.POST("", handler.CreateSkill)
-	skill.PUT("/:id", handler.UpdateSkill)
-	skill.DELETE("/:id", handler.DeleteSkill)
-
-	work := api.Group("/work")
-	work.POST("", handler.CreateWork)
-	work.PUT("/:id", handler.UpadateWork)
-	work.DELETE("/:id", handler.DeleteWork)
+	apiGroup.POST("/work", handler.CreateWork)
+	apiGroup.PUT("/work/:id", handler.UpadateWork)
+	apiGroup.DELETE("/work/:id", handler.DeleteWork)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }

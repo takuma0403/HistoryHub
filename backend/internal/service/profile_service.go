@@ -5,26 +5,15 @@ import (
 	"HistoryHub/internal/repository"
 	"errors"
 	"time"
-
-	"github.com/google/uuid"
 )
 
-func GetProfile(UserID uuid.UUID) (*model.Profile, error) {
-	profile, err := repository.GetProfileByUserID(UserID)
-	if err != nil {
-		return nil, err
-	}
-	return profile, nil
-}
-
 func CreateProfile(profile model.Profile) error {
-	preProfile, _ := repository.GetProfileByUserID(profile.UserID)
+	preProfile, _ := repository.GetProfileByUserID(profile.UserID.String())
 
 	if preProfile != nil {
 		return errors.New("profile already created")
 	}
 
-	profile.ID = uuid.New()
 	profile.CreatedAt = time.Now()
 	profile.UpdatedAt = time.Now()
 
@@ -35,7 +24,7 @@ func CreateProfile(profile model.Profile) error {
 }
 
 func UpdateProfile(profile model.Profile) error {
-	preProfile, err := repository.GetProfileByUserID(profile.UserID)
+	preProfile, err := repository.GetProfileByUserID(profile.UserID.String())
 
 	if err != nil {
 		return err
@@ -52,4 +41,12 @@ func UpdateProfile(profile model.Profile) error {
 		return err
 	}
 	return nil
+}
+
+func GetProfile(UserID string) (*model.Profile, error) {
+	profile, err := repository.GetProfileByUserID(UserID)
+	if err != nil  {
+		return nil, err
+	}
+	return profile, nil
 }
