@@ -1,6 +1,10 @@
 # HistoryHub
 ## ポートフォリオ版github的なものをつくろう
 
+## 開発仕様
+### ER図
+![ER図](/document/images/ER.png)
+
 ## 環境構築手順
 ### 開発環境
 1. リポジトリのクローン  
