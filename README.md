@@ -35,7 +35,7 @@
      cd HistoryHub
 3. 設定ファイルのコピー
     ```bash
-    cp doc/example/sample.env backend/.env
+    cp docs/example/sample.env backend/.env
 4. 設定ファイルの編集  
    backend/.envを開いてコメントのある3項目を編集する
    1. < your-secret-key >
