@@ -5,36 +5,35 @@ import (
 	"HistoryHub/internal/service"
 	"HistoryHub/internal/util"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type GetProfileResponse struct {
-	ID        uuid.UUID  `json:"id"`
-	UserID    uuid.UUID  `json:"userId"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	BirthDate *time.Time `json:"birthDate"`
-	School    *string    `json:"school"`
-	Hobby     *string    `json:"hobby"`
+	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"userId"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	BirthDate string    `json:"birthDate"`
+	School    string    `json:"school"`
+	Hobby     string    `json:"hobby"`
 }
 
 type CreateProfileRequest struct {
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	BirthDate *time.Time `json:"birthDate,omitempty"`
-	School    *string    `json:"school,omitempty"`
-	Hobby     *string    `json:"hobby,omitempty"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	BirthDate string `json:"birthDate,omitempty"`
+	School    string `json:"school,omitempty"`
+	Hobby     string `json:"hobby,omitempty"`
 }
 
 type UpdateProfileRequest struct {
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	BirthDate *time.Time `json:"birthDate"`
-	School    *string    `json:"school"`
-	Hobby     *string    `json:"hobby"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	BirthDate string `json:"birthDate"`
+	School    string `json:"school"`
+	Hobby     string `json:"hobby"`
 }
 
 // GetProfile godoc
@@ -64,7 +63,7 @@ func GetProfile(c echo.Context) error {
 		UserID:    profile.UserID,
 		FirstName: profile.FirstName,
 		LastName:  profile.LastName,
-		BirthDate: profile.BirthDate,
+		BirthDate: profile.BirthDate.String(),
 		School:    profile.School,
 		Hobby:     profile.Hobby,
 	}
@@ -98,7 +97,7 @@ func GetProfileByUsername(c echo.Context) error {
 	res := &GetProfileResponse{
 		FirstName: profile.FirstName,
 		LastName:  profile.LastName,
-		BirthDate: profile.BirthDate,
+		BirthDate: profile.BirthDate.String(),
 		School:    profile.School,
 		Hobby:     profile.Hobby,
 	}
@@ -130,11 +129,16 @@ func CreateProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	birthDate, err := util.ParseBirthDate(req.BirthDate)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	profile := model.Profile{
 		UserID:    UserID,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
-		BirthDate: req.BirthDate,
+		BirthDate: birthDate,
 		School:    req.School,
 		Hobby:     req.Hobby,
 	}
@@ -170,11 +174,16 @@ func UpdateProfile(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	birthDate, err := util.ParseBirthDate(req.BirthDate)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	profile := model.Profile{
 		UserID:    UserID,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
-		BirthDate: req.BirthDate,
+		BirthDate: birthDate,
 		School:    req.School,
 		Hobby:     req.Hobby,
 	}
