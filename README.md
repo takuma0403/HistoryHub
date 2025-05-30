@@ -25,6 +25,9 @@
 ### ER図
 ![ER図](/document/images/ER.png)
 
+### API 一覧 (Swagger UI)
+SwaggerによるAPIドキュメントは[こちら](https://takuma0403.github.io/HistoryHub/)から参照。
+
 ## 環境構築手順
 ### 開発環境
 1. リポジトリのクローン  
