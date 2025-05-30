@@ -94,7 +94,7 @@ func GetWorksByUsername(c echo.Context) error {
 // @Success      200          {object}  model.Work
 // @Failure      401          {string}  string  "Unauthorized"
 // @Failure      500          {string}  string  "Internal Server Error"
-// @Security     ApiKeyAuth
+// @Security     BearerAuth
 // @Router       /api/work [post]
 func CreateWork(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
@@ -168,7 +168,7 @@ func CreateWork(c echo.Context) error {
 // @Failure      401          {string}  string  "Unauthorized"
 // @Failure      404          {string}  string  "Not found"
 // @Failure      500          {string}  string  "Internal Server Error"
-// @Security     ApiKeyAuth
+// @Security     BearerAuth
 // @Router       /api/work/{id} [put]
 func UpadateWork(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
@@ -253,7 +253,7 @@ func UpadateWork(c echo.Context) error {
 // @Failure      400  {string}  string  "Bad Request"
 // @Failure      401  {string}  string  "Unauthorized"
 // @Failure      500  {string}  string  "Internal Server Error"
-// @Security     ApiKeyAuth
+// @Security     BearerAuth
 // @Router       /api/work/{id} [delete]
 func DeleteWork(c echo.Context) error {
 	_, err := util.GetUserIDFromJWT(c)

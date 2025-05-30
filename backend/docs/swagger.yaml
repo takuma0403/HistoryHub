@@ -365,6 +365,64 @@ paths:
       summary: スキル更新
       tags:
       - Skill
+  /api/user/username:
+    get:
+      description: ログイン中のユーザー名を取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetUsernameResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: ユーザー名取得
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: ログインユーザーのユーザー名を更新
+      parameters:
+      - description: ユーザー名情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated username
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: ユーザー名変更
+      tags:
+      - User
   /api/work:
     post:
       consumes:
@@ -413,7 +471,7 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - BearerAuth: []
       summary: Create a new work
       tags:
       - Work
@@ -444,7 +502,7 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - BearerAuth: []
       summary: Delete a work
       tags:
       - Work
@@ -508,7 +566,7 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - BearerAuth: []
       summary: Update a work
       tags:
       - Work
@@ -675,64 +733,6 @@ paths:
       summary: Get works by username
       tags:
       - Public
-  /user/username:
-    get:
-      description: ログイン中のユーザー名を取得
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.GetUsernameResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: ユーザー名取得
-      tags:
-      - User
-    put:
-      consumes:
-      - application/json
-      description: ログインユーザーのユーザー名を更新
-      parameters:
-      - description: ユーザー名情報
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handler.UpdateUsernameRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Updated username
-          schema:
-            type: string
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: ユーザー名変更
-      tags:
-      - User
 securityDefinitions:
   BearerAuth:
     in: header

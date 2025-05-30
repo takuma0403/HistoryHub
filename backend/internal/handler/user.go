@@ -25,7 +25,7 @@ type UpdateUsernameRequest struct {
 // @Failure      401 {string} string "Unauthorized"
 // @Failure      500 {string} string "Internal server error"
 // @Security     BearerAuth
-// @Router       /user/username [get]
+// @Router       /api/user/username [get]
 func GetUsername(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -53,7 +53,7 @@ func GetUsername(c echo.Context) error {
 // @Failure      401 {string} string "Unauthorized"
 // @Failure      500 {string} string "Internal server error"
 // @Security     BearerAuth
-// @Router       /user/username [put]
+// @Router       /api/user/username [put]
 func UpdateUsername(c echo.Context) error {
 	var req UpdateUsernameRequest
 	if err := c.Bind(&req); err != nil {
