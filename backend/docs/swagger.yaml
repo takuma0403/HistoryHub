@@ -149,6 +149,222 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/profile:
+    get:
+      description: ログインユーザーのプロフィールを取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール取得
+      tags:
+      - Profile
+    post:
+      consumes:
+      - application/json
+      description: ログインユーザーのプロフィールを新規作成
+      parameters:
+      - description: プロフィール情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール作成
+      tags:
+      - Profile
+    put:
+      consumes:
+      - application/json
+      description: ログインユーザーのプロフィールを更新
+      parameters:
+      - description: プロフィール情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール更新
+      tags:
+      - Profile
+  /api/skills:
+    get:
+      description: ログインユーザーのスキル情報を取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.GetSkillResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル一覧取得
+      tags:
+      - Skill
+    post:
+      consumes:
+      - application/json
+      description: ログインユーザーのスキルを追加
+      parameters:
+      - description: スキル情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル追加
+      tags:
+      - Skill
+  /api/skills/{id}:
+    delete:
+      description: 指定IDのスキルを削除
+      parameters:
+      - description: スキルID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル削除
+      tags:
+      - Skill
+    put:
+      consumes:
+      - application/json
+      description: 指定IDのスキルを更新
+      parameters:
+      - description: スキルID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: スキル情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpadateSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル更新
+      tags:
+      - Skill
   /api/work:
     post:
       consumes:
@@ -327,7 +543,7 @@ paths:
             type: string
       summary: ログイン
       tags:
-      - auth
+      - Auth
   /auth/signup:
     post:
       consumes:
@@ -357,7 +573,7 @@ paths:
             type: string
       summary: 新規登録
       tags:
-      - auth
+      - Auth
   /auth/verify:
     post:
       consumes:
@@ -387,96 +603,7 @@ paths:
             type: string
       summary: メール認証
       tags:
-      - auth
-  /profile:
-    get:
-      description: ログインユーザーのプロフィールを取得
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.GetProfileResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Not found
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: プロフィール取得
-      tags:
-      - profile
-    post:
-      consumes:
-      - application/json
-      description: ログインユーザーのプロフィールを新規作成
-      parameters:
-      - description: プロフィール情報
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handler.CreateProfileRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: プロフィール作成
-      tags:
-      - profile
-    put:
-      consumes:
-      - application/json
-      description: ログインユーザーのプロフィールを更新
-      parameters:
-      - description: プロフィール情報
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handler.UpdateProfileRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: プロフィール更新
-      tags:
-      - profile
+      - Auth
   /public/profile/{username}:
     get:
       description: 指定されたユーザー名のプロフィールを取得
@@ -548,133 +675,6 @@ paths:
       summary: Get works by username
       tags:
       - Public
-  /skills:
-    get:
-      description: ログインユーザーのスキル情報を取得
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/handler.GetSkillResponse'
-            type: array
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Not found
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: スキル一覧取得
-      tags:
-      - skill
-    post:
-      consumes:
-      - application/json
-      description: ログインユーザーのスキルを追加
-      parameters:
-      - description: スキル情報
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handler.CreateSkillRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: スキル追加
-      tags:
-      - skill
-  /skills/{id}:
-    delete:
-      description: 指定IDのスキルを削除
-      parameters:
-      - description: スキルID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: スキル削除
-      tags:
-      - skill
-    put:
-      consumes:
-      - application/json
-      description: 指定IDのスキルを更新
-      parameters:
-      - description: スキルID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: スキル情報
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/handler.UpadateSkillRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: スキル更新
-      tags:
-      - skill
   /user/username:
     get:
       description: ログイン中のユーザー名を取得
@@ -697,7 +697,7 @@ paths:
       - BearerAuth: []
       summary: ユーザー名取得
       tags:
-      - user
+      - User
     put:
       consumes:
       - application/json
@@ -732,9 +732,9 @@ paths:
       - BearerAuth: []
       summary: ユーザー名変更
       tags:
-      - user
+      - User
 securityDefinitions:
-  ApiKeyAuth:
+  BearerAuth:
     in: header
     name: Authorization
     type: apiKey

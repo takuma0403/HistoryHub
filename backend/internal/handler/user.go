@@ -19,7 +19,7 @@ type UpdateUsernameRequest struct {
 // GetUsername godoc
 // @Summary      ユーザー名取得
 // @Description  ログイン中のユーザー名を取得
-// @Tags         user
+// @Tags         User
 // @Produce      json
 // @Success      200 {object} GetUsernameResponse
 // @Failure      401 {string} string "Unauthorized"
@@ -44,7 +44,7 @@ func GetUsername(c echo.Context) error {
 // UpdateUsername godoc
 // @Summary      ユーザー名変更
 // @Description  ログインユーザーのユーザー名を更新
-// @Tags         user
+// @Tags         User
 // @Accept       json
 // @Produce      json
 // @Param        request body UpdateUsernameRequest true "ユーザー名情報"

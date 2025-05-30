@@ -20,7 +20,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @securityDefinitions.apikey ApiKeyAuth
+// @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
 

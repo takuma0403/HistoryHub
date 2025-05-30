@@ -39,13 +39,13 @@ type UpdateProfileRequest struct {
 // GetProfile godoc
 // @Summary      プロフィール取得
 // @Description  ログインユーザーのプロフィールを取得
-// @Tags         profile
+// @Tags         Profile
 // @Produce      json
 // @Success      200 {object} GetProfileResponse
 // @Failure      401 {string} string "Unauthorized"
 // @Failure      404 {string} string "Not found"
 // @Security     BearerAuth
-// @Router       /profile [get]
+// @Router       /api/profile [get]
 func GetProfile(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -108,7 +108,7 @@ func GetProfileByUsername(c echo.Context) error {
 // CreateProfile godoc
 // @Summary      プロフィール作成
 // @Description  ログインユーザーのプロフィールを新規作成
-// @Tags         profile
+// @Tags         Profile
 // @Accept       json
 // @Produce      json
 // @Param        request body CreateProfileRequest true "プロフィール情報"
@@ -117,7 +117,7 @@ func GetProfileByUsername(c echo.Context) error {
 // @Failure      401 {string} string "Unauthorized"
 // @Failure      500 {string} string "Internal server error"
 // @Security     BearerAuth
-// @Router       /profile [post]
+// @Router       /api/profile [post]
 func CreateProfile(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -153,7 +153,7 @@ func CreateProfile(c echo.Context) error {
 // UpdateProfile godoc
 // @Summary      プロフィール更新
 // @Description  ログインユーザーのプロフィールを更新
-// @Tags         profile
+// @Tags         Profile
 // @Accept       json
 // @Produce      json
 // @Param        request body UpdateProfileRequest true "プロフィール情報"
@@ -162,7 +162,7 @@ func CreateProfile(c echo.Context) error {
 // @Failure      401 {string} string "Unauthorized"
 // @Failure      500 {string} string "Internal server error"
 // @Security     BearerAuth
-// @Router       /profile [put]
+// @Router       /api/profile [put]
 func UpdateProfile(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {

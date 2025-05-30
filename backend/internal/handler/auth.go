@@ -25,7 +25,7 @@ type LoginRequest struct {
 // SignUp godoc
 // @Summary      新規登録
 // @Description  ユーザーの新規登録を行い、認証メールを送信する
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        request body SignUpRequest true "登録情報"
@@ -48,7 +48,7 @@ func SignUp(c echo.Context) error {
 // VerifyEmail godoc
 // @Summary      メール認証
 // @Description  登録時に送信されたコードでメールを認証する
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        request body VerifyRequest true "認証情報"
@@ -71,7 +71,7 @@ func VerifyEmail(c echo.Context) error {
 // Login godoc
 // @Summary      ログイン
 // @Description  ユーザーのログイン認証とJWTの発行
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        request body LoginRequest true "ログイン情報"
