@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -28,6 +29,7 @@ func GetUserIDFromJWT(c echo.Context) (uuid.UUID, error) {
 	if err != nil {
 		return uuid.Nil, errors.New("invalid UUID format in token")
 	}
+	fmt.Print("UserID:", userID)
 
 	return userID, nil
 }

@@ -1,6 +1,33 @@
 # HistoryHub
 ## ポートフォリオ版github的なものをつくろう
 
+## 開発仕様
+- Nginx を使用して、ビルド済みのフロントエンドファイルを配信する
+- Nginx でバックエンドを配信
+- Docker で環境構築
+- ユーザー認証時のメール認証にはGmailのsmtpサーバーを用いる
+- 本番環境のサーバーはVPS上に構築する
+  
+#### Frontend
+- npmを用いてビルドする
+- React + Redux で状態管理を行う
+- Redux Toolkit の createApi（RTK Query）を使用して API 処理を管理する
+- Material UI を用いてスタイルの統一を行う
+  
+#### Backend
+- Go言語のフレームワーク Echo を使用して API を構築する
+- トークン認証には JWT（JSON Web Token）を使用する
+- DBはSQLiteを用いる
+- 本番環境と開発環境で Dockerfile を分け、開発環境では Air を使用してホットリロードが有効になるように管理する
+
+### システム構成図
+![システム構成](/document/images/system_image.png)
+### ER図
+![ER図](/document/images/ER.png)
+
+### API 一覧 (Swagger UI)
+SwaggerによるAPIドキュメントは[こちら](https://takuma0403.github.io/HistoryHub/)から参照。
+
 ## 環境構築手順
 ### 開発環境
 1. リポジトリのクローン  
@@ -11,7 +38,7 @@
      cd HistoryHub
 3. 設定ファイルのコピー
     ```bash
-    cp doc/example/sample.env backend/.env
+    cp docs/example/sample.env backend/.env
 4. 設定ファイルの編集  
    backend/.envを開いてコメントのある3項目を編集する
    1. < your-secret-key >
