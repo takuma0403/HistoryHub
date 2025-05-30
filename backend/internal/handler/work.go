@@ -42,6 +42,14 @@ type UpadateWorkRequest struct {
 	Use         string `json:"use"`
 }
 
+// GetWorksByUsername godoc
+// @Summary      Get works by username
+// @Description  Retrieves all works associated with the given username.
+// @Tags         Public
+// @Param        username  path      string  true  "Username"
+// @Success      200       {array}   handler.GetWorkResponse
+// @Failure      404       {string}  string  "Not found"
+// @Router       /public/work/{username} [get]
 func GetWorksByUsername(c echo.Context) error {
 	username := c.Param("username")
 	UserID, err := service.GetUserIDByUsername(username)
@@ -71,6 +79,23 @@ func GetWorksByUsername(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// CreateWork godoc
+// @Summary      Create a new work
+// @Description  Creates a new work item for the authenticated user. Accepts multipart/form-data.
+// @Tags         Work
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        name         formData  string  true  "Work name"
+// @Param        description  formData  string  true  "Description"
+// @Param        link         formData  string  false "Link to work"
+// @Param        period       formData  string  false "Development period"
+// @Param        use          formData  string  false "Technologies used"
+// @Param        image        formData  file    false "Image file"
+// @Success      200          {object}  model.Work
+// @Failure      401          {string}  string  "Unauthorized"
+// @Failure      500          {string}  string  "Internal Server Error"
+// @Security     ApiKeyAuth
+// @Router       /api/work [post]
 func CreateWork(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -125,6 +150,26 @@ func CreateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, work)
 }
 
+// UpadateWork godoc
+// @Summary      Update a work
+// @Description  Updates an existing work by ID. Accepts multipart/form-data.
+// @Tags         Work
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        id           path      string  true  "Work ID (UUID)"
+// @Param        name         formData  string  true  "Work name"
+// @Param        description  formData  string  true  "Description"
+// @Param        link         formData  string  false "Link to work"
+// @Param        period       formData  string  false "Development period"
+// @Param        use          formData  string  false "Technologies used"
+// @Param        image        formData  file    false "Image file"
+// @Success      200          {object}  model.Work
+// @Failure      400          {string}  string  "Bad Request"
+// @Failure      401          {string}  string  "Unauthorized"
+// @Failure      404          {string}  string  "Not found"
+// @Failure      500          {string}  string  "Internal Server Error"
+// @Security     ApiKeyAuth
+// @Router       /api/work/{id} [put]
 func UpadateWork(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -199,6 +244,17 @@ func UpadateWork(c echo.Context) error {
 	return c.JSON(http.StatusOK, work)
 }
 
+// DeleteWork godoc
+// @Summary      Delete a work
+// @Description  Deletes a work item by ID for the authenticated user.
+// @Tags         Work
+// @Param        id   path      string  true  "Work ID (UUID)"
+// @Success      200  {string}  string  "Deleted"
+// @Failure      400  {string}  string  "Bad Request"
+// @Failure      401  {string}  string  "Unauthorized"
+// @Failure      500  {string}  string  "Internal Server Error"
+// @Security     ApiKeyAuth
+// @Router       /api/work/{id} [delete]
 func DeleteWork(c echo.Context) error {
 	_, err := util.GetUserIDFromJWT(c)
 	if err != nil {

@@ -14,7 +14,15 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
+
+	"HistoryHub/docs"
+
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	config.LoadEnv()
@@ -38,6 +46,9 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(200, "HistoryHub API OK")
 	})
+
+	docs.SwaggerInfo.Title = "HistoryHub API"
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	publicAPI := e.Group("/public")
 

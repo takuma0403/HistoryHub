@@ -1,0 +1,741 @@
+definitions:
+  handler.CreateProfileRequest:
+    properties:
+      birthDate:
+        type: string
+      firstName:
+        type: string
+      hobby:
+        type: string
+      lastName:
+        type: string
+      school:
+        type: string
+    type: object
+  handler.CreateSkillRequest:
+    properties:
+      description:
+        type: string
+      isMainSkill:
+        type: boolean
+      name:
+        type: string
+    type: object
+  handler.GetProfileResponse:
+    properties:
+      birthDate:
+        type: string
+      firstName:
+        type: string
+      hobby:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      school:
+        type: string
+      userId:
+        type: string
+    type: object
+  handler.GetSkillResponse:
+    properties:
+      UserID:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      isMainSkill:
+        type: boolean
+      name:
+        type: string
+    type: object
+  handler.GetUsernameResponse:
+    properties:
+      username:
+        type: string
+    type: object
+  handler.GetWorkResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      imagePath:
+        type: string
+      link:
+        type: string
+      name:
+        type: string
+      period:
+        type: string
+      use:
+        type: string
+      userId:
+        type: string
+    type: object
+  handler.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handler.SignUpRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handler.UpadateSkillRequest:
+    properties:
+      description:
+        type: string
+      isMainSkill:
+        type: boolean
+      name:
+        type: string
+    type: object
+  handler.UpdateProfileRequest:
+    properties:
+      birthDate:
+        type: string
+      firstName:
+        type: string
+      hobby:
+        type: string
+      lastName:
+        type: string
+      school:
+        type: string
+    type: object
+  handler.UpdateUsernameRequest:
+    properties:
+      username:
+        type: string
+    type: object
+  handler.VerifyRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  model.Work:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      imagePath:
+        type: string
+      link:
+        type: string
+      name:
+        type: string
+      period:
+        type: string
+      updatedAt:
+        type: string
+      use:
+        type: string
+      userID:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/work:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a new work item for the authenticated user. Accepts multipart/form-data.
+      parameters:
+      - description: Work name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Link to work
+        in: formData
+        name: link
+        type: string
+      - description: Development period
+        in: formData
+        name: period
+        type: string
+      - description: Technologies used
+        in: formData
+        name: use
+        type: string
+      - description: Image file
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Work'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new work
+      tags:
+      - Work
+  /api/work/{id}:
+    delete:
+      description: Deletes a work item by ID for the authenticated user.
+      parameters:
+      - description: Work ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a work
+      tags:
+      - Work
+    put:
+      consumes:
+      - multipart/form-data
+      description: Updates an existing work by ID. Accepts multipart/form-data.
+      parameters:
+      - description: Work ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Work name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Link to work
+        in: formData
+        name: link
+        type: string
+      - description: Development period
+        in: formData
+        name: period
+        type: string
+      - description: Technologies used
+        in: formData
+        name: use
+        type: string
+      - description: Image file
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Work'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a work
+      tags:
+      - Work
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: ユーザーのログイン認証とJWTの発行
+      parameters:
+      - description: ログイン情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'token: JWTトークン'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: ログイン
+      tags:
+      - auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: ユーザーの新規登録を行い、認証メールを送信する
+      parameters:
+      - description: 登録情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Verification email sent
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: 新規登録
+      tags:
+      - auth
+  /auth/verify:
+    post:
+      consumes:
+      - application/json
+      description: 登録時に送信されたコードでメールを認証する
+      parameters:
+      - description: 認証情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.VerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account verified
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: メール認証
+      tags:
+      - auth
+  /profile:
+    get:
+      description: ログインユーザーのプロフィールを取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール取得
+      tags:
+      - profile
+    post:
+      consumes:
+      - application/json
+      description: ログインユーザーのプロフィールを新規作成
+      parameters:
+      - description: プロフィール情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール作成
+      tags:
+      - profile
+    put:
+      consumes:
+      - application/json
+      description: ログインユーザーのプロフィールを更新
+      parameters:
+      - description: プロフィール情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: プロフィール更新
+      tags:
+      - profile
+  /public/profile/{username}:
+    get:
+      description: 指定されたユーザー名のプロフィールを取得
+      parameters:
+      - description: ユーザー名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetProfileResponse'
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: プロフィール取得（ユーザー名）
+      tags:
+      - Public
+  /public/skill/{username}:
+    get:
+      description: 指定されたユーザー名のスキルを取得
+      parameters:
+      - description: ユーザー名
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.GetSkillResponse'
+            type: array
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: スキル一覧取得（ユーザー名）
+      tags:
+      - Public
+  /public/work/{username}:
+    get:
+      description: Retrieves all works associated with the given username.
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.GetWorkResponse'
+            type: array
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: Get works by username
+      tags:
+      - Public
+  /skills:
+    get:
+      description: ログインユーザーのスキル情報を取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.GetSkillResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル一覧取得
+      tags:
+      - skill
+    post:
+      consumes:
+      - application/json
+      description: ログインユーザーのスキルを追加
+      parameters:
+      - description: スキル情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル追加
+      tags:
+      - skill
+  /skills/{id}:
+    delete:
+      description: 指定IDのスキルを削除
+      parameters:
+      - description: スキルID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル削除
+      tags:
+      - skill
+    put:
+      consumes:
+      - application/json
+      description: 指定IDのスキルを更新
+      parameters:
+      - description: スキルID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: スキル情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpadateSkillRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: スキル更新
+      tags:
+      - skill
+  /user/username:
+    get:
+      description: ログイン中のユーザー名を取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetUsernameResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: ユーザー名取得
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: ログインユーザーのユーザー名を更新
+      parameters:
+      - description: ユーザー名情報
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateUsernameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated username
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: ユーザー名変更
+      tags:
+      - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

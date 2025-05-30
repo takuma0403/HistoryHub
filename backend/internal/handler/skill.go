@@ -30,6 +30,16 @@ type UpadateSkillRequest struct {
 	IsMainSkill bool   `json:"isMainSkill"`
 }
 
+// GetSkill godoc
+// @Summary      スキル一覧取得
+// @Description  ログインユーザーのスキル情報を取得
+// @Tags         skill
+// @Produce      json
+// @Success      200 {array} GetSkillResponse
+// @Failure      401 {string} string "Unauthorized"
+// @Failure      404 {string} string "Not found"
+// @Security     BearerAuth
+// @Router       /skills [get]
 func GetSkill(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -54,6 +64,15 @@ func GetSkill(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// GetSkillByUsername godoc
+// @Summary      スキル一覧取得（ユーザー名）
+// @Description  指定されたユーザー名のスキルを取得
+// @Tags         Public
+// @Produce      json
+// @Param        username path string true "ユーザー名"
+// @Success      200 {array} GetSkillResponse
+// @Failure      404 {string} string "Not found"
+// @Router       /public/skill/{username} [get]
 func GetSkillByUsername(c echo.Context) error {
 	username := c.Param("username")
 	UserID, err := service.GetUserIDByUsername(username)
@@ -80,6 +99,19 @@ func GetSkillByUsername(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+// CreateSkill godoc
+// @Summary      スキル追加
+// @Description  ログインユーザーのスキルを追加
+// @Tags         skill
+// @Accept       json
+// @Produce      json
+// @Param        request body CreateSkillRequest true "スキル情報"
+// @Success      201
+// @Failure      400 {string} string "Bad request"
+// @Failure      401 {string} string "Unauthorized"
+// @Failure      500 {string} string "Internal server error"
+// @Security     BearerAuth
+// @Router       /skills [post]
 func CreateSkill(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -106,6 +138,20 @@ func CreateSkill(c echo.Context) error {
 	return c.JSON(http.StatusCreated, nil)
 }
 
+// UpdateSkill godoc
+// @Summary      スキル更新
+// @Description  指定IDのスキルを更新
+// @Tags         skill
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "スキルID"
+// @Param        request body UpadateSkillRequest true "スキル情報"
+// @Success      200
+// @Failure      400 {string} string "Bad request"
+// @Failure      401 {string} string "Unauthorized"
+// @Failure      500 {string} string "Internal server error"
+// @Security     BearerAuth
+// @Router       /skills/{id} [put]
 func UpdateSkill(c echo.Context) error {
 	UserID, err := util.GetUserIDFromJWT(c)
 	if err != nil {
@@ -139,6 +185,18 @@ func UpdateSkill(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
+// DeleteSkill godoc
+// @Summary      スキル削除
+// @Description  指定IDのスキルを削除
+// @Tags         skill
+// @Produce      json
+// @Param        id path string true "スキルID"
+// @Success      204
+// @Failure      400 {string} string "Bad request"
+// @Failure      401 {string} string "Unauthorized"
+// @Failure      500 {string} string "Internal server error"
+// @Security     BearerAuth
+// @Router       /skills/{id} [delete]
 func DeleteSkill(c echo.Context) error {
 	_, err := util.GetUserIDFromJWT(c)
 	if err != nil {
