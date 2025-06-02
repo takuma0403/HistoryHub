@@ -9,7 +9,13 @@ import {
   Typography,
   CircularProgress,
   Link as MuiLink,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setEmail } from '../features/auth/authSlice';
@@ -20,6 +26,7 @@ export default function Signup() {
   const [signup, { isLoading, error }] = useSignupMutation();
   const [email, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,6 +41,14 @@ export default function Signup() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
   };
 
   return (
@@ -59,15 +74,28 @@ export default function Signup() {
               onChange={(e) => setEmailInput(e.target.value)}
               required
             />
-            <TextField
-              label="パスワード"
-              type="password"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <FormControl fullWidth variant="outlined" margin="normal" required>
+              <InputLabel htmlFor="password">パスワード</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={showPassword ? 'パスワードを隠す' : 'パスワードを表示'}
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="パスワード"
+              />
+            </FormControl>
             {error && (
               <Typography color="error" variant="body2" mt={1}>
                 登録に失敗しました
