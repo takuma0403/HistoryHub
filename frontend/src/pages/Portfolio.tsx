@@ -416,7 +416,16 @@ export default function Portofolio() {
                       {skill.name}
                     </Typography>
                     <Box mb={2} />
-                    <Typography variant="body2" color="text.primary">
+                    <Typography
+                      variant="body2"
+                      color="text.primary"
+                      sx={{
+                        textAlign: "left",
+                        whiteSpace: "pre-wrap",
+                        px: 2,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {skill.description}
                     </Typography>
                   </CardContent>
