@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -42,6 +42,15 @@ export default function Portofolio() {
       navigate("/error/404");
     }
   }, [isProfileLoading, profile, navigate]);
+
+  useEffect(() => {
+    if (profile) {
+      document.title = `${profile.firstName} ${profile.lastName} のポートフォリオ`;
+    }
+    return () => {
+      document.title = `HistoryHub`; // アンマウント時に元に戻す
+    };
+  }, [profile]);
 
   if (isProfileLoading || isSkillsLoading || isWorksLoading)
     return (
@@ -416,7 +425,16 @@ export default function Portofolio() {
                       {skill.name}
                     </Typography>
                     <Box mb={2} />
-                    <Typography variant="body2" color="text.primary">
+                    <Typography
+                      variant="body2"
+                      color="text.primary"
+                      sx={{
+                        textAlign: "left",
+                        whiteSpace: "pre-wrap",
+                        px: 2,
+                        wordBreak: "break-word",
+                      }}
+                    >
                       {skill.description}
                     </Typography>
                   </CardContent>
