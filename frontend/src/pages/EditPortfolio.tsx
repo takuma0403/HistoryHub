@@ -94,6 +94,15 @@ export default function EditPortfolio() {
   }, [profile, isProfileLoading, navigate]);
 
   useEffect(() => {
+    if (profile) {
+      document.title = `[編集中] ${profile.lastName} ${profile.firstName} のポートフォリオ`;
+    }
+    return () => {
+      document.title = `HistoryHub`; // アンマウント時に元に戻す
+    };
+  }, [profile]);
+
+  useEffect(() => {
     if (skills) {
       setEditableSkills(skills);
     }
@@ -468,7 +477,7 @@ export default function EditPortfolio() {
                             top: 8,
                             right: 8,
                             backgroundColor: "background.default",
-                            '&:hover': {
+                            "&:hover": {
                               backgroundColor: "text.primary",
                             },
                           }}
