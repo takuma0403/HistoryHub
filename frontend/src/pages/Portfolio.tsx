@@ -45,7 +45,7 @@ export default function Portofolio() {
 
   useEffect(() => {
     if (profile) {
-      document.title = `${profile.firstName} ${profile.lastName} のポートフォリオ`;
+      document.title = `${profile.lastName} ${profile.firstName} のポートフォリオ`;
     }
     return () => {
       document.title = `HistoryHub`; // アンマウント時に元に戻す
