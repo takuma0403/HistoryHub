@@ -1,10 +1,6 @@
 # HistoryHub
 ## ポートフォリオ版github的なものをつくろう
 
-## デモページ
-  http://historyhub.online/ttakumasagau
-
-
 ## 開発仕様
 - Nginx を使用して、ビルド済みのフロントエンドファイルを配信する
 - Nginx でバックエンドを配信
